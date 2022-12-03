@@ -1,9 +1,14 @@
+<script setup>
+import TopNav from '/src/components/TopBar.vue'
+import FooterNav from '/src/components/Footer.vue'
+</script>
+
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <div id="app" class="flex flex-col h-screen justify-between">
+    <TopNav />
+    <router-view/>
+    <FooterNav />
   </div>
-  <router-view/>
 </template>
 
 <style>

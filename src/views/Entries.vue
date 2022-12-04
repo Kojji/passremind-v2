@@ -11,19 +11,13 @@ onMounted(() => {
   // console.log(store.getters['login/getCode'])
   // console.log(store.getters['login/getLogged'])
   // check token, if not valid redirect to logout
-  checkToken(store.getters['login/getCode'])
+  checkToken(store.getters['login/getIdToken'])
 
 })
 
-function checkToken(code) {
-  console.log(code)
-  $axios.get(import.meta.env.VITE_API_URL + '/')
-  .then((data)=>{
-    console.log(data.data)
-  }).catch((err)=>{
-    console.log(err)
-  })
 
+function checkToken(token) {
+  console.log(token)
 }
 </script>
 

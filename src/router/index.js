@@ -8,8 +8,8 @@ const routes = [
     component: function () {
       return import('../views/Entries.vue')
     },
-    beforeEnter: (to, from) => {
-      if(!store.getters['login/getLogged'] && !store.getters['login/getCode']) {
+    beforeEnter: () => {
+      if(!store.getters['login/getLogged'] && !store.getters['login/getIdToken']) {
         // corrigir - mandar notificação de falha
         return {path: '/about'}
       }
@@ -26,13 +26,21 @@ const routes = [
     path: '/signin',
     name: 'SignIn',
     beforeEnter: (to, from) => {
-      if(to.query.code) {
-        store.commit('login/setLogged', true);
-        store.commit('login/setCode', to.query.code);
-        return {path: '/'}
-      } else {
+      try {
+        if(to.hash.length > 0) {
+          const params = to.hash.substr(1, to.hash.length).split("&");
+          store.commit('login/setLogged', true);
+          store.commit('login/setIdToken', params[0].replace("id_token=",""));
+          return {path: '/'}
+        } else {
+          store.commit('login/setLogged', false);
+          store.commit('login/setIdToken', null);
+          return {path: '/about'}
+        }
+      } catch(e) {
         store.commit('login/setLogged', false);
-        store.commit('login/setCode', null);
+        store.commit('login/setIdToken', null);
+        console.log(e.message);
         return {path: '/about'}
       }
     }

@@ -1,3 +1,22 @@
+<script setup>
+import { computed, onMounted } from 'vue';
+import { useStore } from 'vuex';
+import { useRoute } from 'vue-router';
+
+const store = useStore();
+const route = useRoute();
+
+onMounted(() => {
+  // check token, if not valid redirect to logout
+})
+
+let selectedItem = computed(() => store.getters.getSelectedItem)
+
+function checkToken() {
+
+}
+</script>
+
 <template>
   <div>LoggedIn</div>
   <a href="https://passremind.auth.us-east-1.amazoncognito.com/logout?client_id=3bvhhi5bvlhej5tbhi5atnhfs9&logout_uri=http://localhost:8080/about">

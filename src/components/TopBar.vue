@@ -2,7 +2,7 @@
 import { useStore } from 'vuex';
 import { computed } from 'vue';
 const store = useStore();
-let userLogged = computed(() => store.getters.getLogged);
+let userLogged = computed(() => store.getters['login/getLogged']);
 const loginLink = import.meta.env.VITE_LOGIN_URL;
 const logoutLink = import.meta.env.VITE_LOGOUT_URL;
 </script>
@@ -19,10 +19,10 @@ const logoutLink = import.meta.env.VITE_LOGOUT_URL;
       <div class="block justify-self-end">
         <!-- list and search routes links if logged -->
         <div v-if="userLogged">
-          <a :href="logoutLink" class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">Logout</a>
+          <a :href="logoutLink" class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white">Logout</a>
         </div>
         <div v-else>
-          <a :href="loginLink" class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">Login</a>
+          <a :href="loginLink" class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white">Login</a>
         </div>
       </div>
     </nav>

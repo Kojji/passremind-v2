@@ -1,3 +1,15 @@
+<script setup>
+import { onMounted } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+onMounted(() => {
+  store.commit('login/setLogged', false);
+  store.commit('login/setCode', null);
+})
+</script>
+
 <template>
   <div class="about">
     <h1>This is an about page</h1>

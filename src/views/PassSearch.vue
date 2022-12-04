@@ -7,6 +7,8 @@ const store = useStore();
 const route = useRoute();
 
 onMounted(() => {
+  console.log(store.getters['login/getCode'])
+  console.log(store.getters['login/getLogged'])
   // check token, if not valid redirect to logout
 })
 

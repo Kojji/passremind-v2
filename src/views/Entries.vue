@@ -28,12 +28,12 @@ function checkToken(token) {
 
 <template>
   <div class="container mx-auto">
-    <ul class="flex border-b">
+    <ul class="flex border-b border-orange-800 mb-2">
       <li class="-mb-px mr-1">
-        <a :class="selected === 'search' ? 'bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold' : 'bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold cursor-pointer'" @click="selected = 'search'">Search</a>
+        <a :class="selected === 'search' ? 'bg-white inline-block border-l border-t border-r border-orange-800 rounded-t py-2 px-4 text-orange-300 font-semibold' : 'bg-white inline-block py-2 px-4 text-orange-600 hover:text-orange-800 font-semibold cursor-pointer'" @click="selected = 'search'">Search</a>
       </li>
       <li class="-mb-px mr-1">
-        <a :class="selected === 'list' ? 'bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold' : 'bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold cursor-pointer'" @click="selected = 'list'">List</a>
+        <a :class="selected === 'list' ? 'bg-white inline-block border-l border-t border-r border-orange-800 rounded-t py-2 px-4 text-orange-300 font-semibold' : 'bg-white inline-block py-2 px-4 text-orange-600 hover:text-orange-800 font-semibold cursor-pointer'" @click="selected = 'list'">List</a>
       </li>
     </ul>
     <SearchComponent v-if="selected === 'search'" />

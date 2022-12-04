@@ -8,12 +8,12 @@ const routes = [
     component: function () {
       return import('../views/Entries.vue')
     },
-    beforeEnter: () => {
-      if(!store.getters['login/getLogged'] && !store.getters['login/getIdToken']) {
-        // corrigir - mandar notificação de falha
-        return {path: '/about'}
-      }
-    }
+    // beforeEnter: () => {
+    //   if(!store.getters['login/getLogged'] && !store.getters['login/getIdToken']) {
+    //     // corrigir - mandar notificação de falha
+    //     return {path: '/about'}
+    //   }
+    // }
   },
   {
     path: '/about',

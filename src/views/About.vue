@@ -6,7 +6,7 @@ const store = useStore();
 
 onMounted(() => {
   store.commit('login/setLogged', false);
-  store.commit('login/setCode', null);
+  store.commit('login/setIdToken', null);
 })
 </script>
 

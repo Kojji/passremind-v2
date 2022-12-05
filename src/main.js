@@ -8,9 +8,9 @@ import VueAxios from 'vue-axios'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { faCopy } from '@fortawesome/free-solid-svg-icons'
 
-library.add( faMagnifyingGlass )
+library.add( faCopy )
 
 const app = createApp(App).use(store).use(router).use(VueAxios, axios)
 app.provide('axios', app.config.globalProperties.axios)

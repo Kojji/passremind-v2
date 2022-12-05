@@ -17,7 +17,7 @@ function search() {
       },
       params: {
         'search': searchText.value,
-        'perPage': 20
+        'perPage': 8
       }
     }
   ).then((data)=>{
@@ -29,6 +29,20 @@ function search() {
   }).catch((err)=>{
     console.log(err)
   })
+}
+
+function openCard(entry) {
+  console.log(entry)
+}
+
+function copyText(text) {
+  console.log(text)
+  navigator.clipboard.writeText(text)
+    .then(()=>{
+      console.log("Copiado")
+    })
+  
+  //corrigir - avisar que foi copiado
 }
 </script>
 
@@ -46,9 +60,17 @@ function search() {
     </div>
     <div class="shadow-inner appearance-none border rounded py-2 px-3 leading-tight row-span-3 col-span-1">
       <div v-if="(entries.length === 0)" class="w-full h-full flex items-center justify-center text-zinc-400">no results found!</div>
-      <div v-else>
-        <div v-for="entry of entries" :id="entry.id">
-          <p>{{`${entry.id} - ${entry.service}`}}</p>
+      <div v-else class="grid grid-rows-2 grid-cols-4 gap-2 auto-cols-max h-full">
+        <div v-for="entry of entries" :id="entry.id" class="row-span-1 col-span-1 rounded p-2 flex flex-wrap content-center" style="box-shadow: 0 4px 6px -1px rgba(234, 152, 37, 0.5), 0 2px 4px -1px rgba(234, 152, 37, 0.06);" @click="openCard(entry)">
+          <p class="text-left font-semibold">{{ entry.service }}</p>
+          <div class="w-full flex justify-between">
+            <p>{{(entry.login.length > 14 ? entry.login.slice(0,12) + '...' : entry.login)}}</p>
+            <font-awesome-icon class="cursor-pointer" icon="fa-solid fa-copy" @click.stop="copyText(entry.login)"/>
+          </div>
+          <div class="w-full flex justify-between">
+            <p>{{entry.password.replace(/./g, '*')}}</p>
+            <font-awesome-icon class="cursor-pointer" icon="fa-solid fa-copy" @click.stop="copyText(entry.password)"/>
+          </div>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 # Firebase Config
 .firebaserc
 firebaseConfig.js
+.env
 
 # Logs
 logs
@@ -10,7 +11,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-.env
 
 node_modules
 dist

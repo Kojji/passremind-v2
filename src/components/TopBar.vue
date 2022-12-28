@@ -3,8 +3,8 @@ import { useStore } from 'vuex';
 import { computed } from 'vue';
 const store = useStore();
 let userLogged = computed(() => store.getters['login/getLogged']);
-const loginLink = import.meta.env.VITE_LOGIN_URL;
 const logoutLink = import.meta.env.VITE_LOGOUT_URL;
+
 </script>
 
 <template>
@@ -22,7 +22,9 @@ const logoutLink = import.meta.env.VITE_LOGOUT_URL;
           <a :href="logoutLink" class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white">Logout</a>
         </div>
         <div v-else>
-          <a :href="loginLink" class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white">Login</a>
+          <button @click="$router.push('/login')" class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white" type="button">
+            Login
+          </button>
         </div>
       </div>
     </nav>

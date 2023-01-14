@@ -6,7 +6,7 @@ import FooterNav from '/src/components/Footer.vue'
 <template>
   <div id="app" class="flex flex-col h-screen justify-between">
     <TopNav />
-    <router-view/>
+    <router-view />
     <FooterNav />
   </div>
 </template>

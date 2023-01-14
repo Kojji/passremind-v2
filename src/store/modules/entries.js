@@ -2,7 +2,14 @@
 const state = {
   entries: [],
   listPage: 1,
-  listEntries: []
+  listEntries: [],
+  entryObject: {
+    id: 0,
+    cognito_id: '',
+    service: '',
+    login: '',
+    password: ''
+  }
 }
 
 const mutations = {

@@ -1,4 +1,5 @@
-
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth, db } from "../../../firebase"
 const state = {
   idToken: null,
   logged: false,
@@ -14,7 +15,23 @@ const mutations = {
 }
 
 const actions = {
-
+  signIn(state, form) {
+    return new Promise((res, rej)=>{
+      signInWithEmailAndPassword(auth, form.email, form.password)
+        .then(result => {
+          state.commit("setLogged", true)
+          state.commit("setIdToken", result.user.uid)
+          // db.collection("users").doc(result.user.uid).get()
+          // .then(doc => {
+          //   console.log(doc)
+          // })
+          // router.push('/'); 
+          res();
+        }).catch(() => {
+          rej('err1');
+        })
+    })
+  }
 }
 
 const getters = {

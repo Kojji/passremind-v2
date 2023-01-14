@@ -1,4 +1,4 @@
-import { signInWithEmailAndPassword, setPersistence, inMemoryPersistence } from "firebase/auth"
+import { signInWithEmailAndPassword, setPersistence, inMemoryPersistence, signOut } from "firebase/auth"
 import { doc, getDoc } from "firebase/firestore"
 import { auth, db } from "../../../firebase"
 import router from '../../router'
@@ -35,6 +35,19 @@ const actions = {
             }).catch(() => {
               rej('err1');
             });
+        });
+    });
+  },
+  signOut(state) {
+    return new Promise((res, rej)=>{
+      signOut(auth)
+        .then(() => {
+          state.commit("setLogged", false);
+          state.commit("setIdToken", null);
+          router.push('/login');
+          res();
+        }).catch(() => {
+          rej();
         });
     });
   }

@@ -3,8 +3,9 @@ import { useStore } from 'vuex';
 import { computed } from 'vue';
 const store = useStore();
 let userLogged = computed(() => store.getters['login/getLogged']);
-const logoutLink = import.meta.env.VITE_LOGOUT_URL;
-
+function doLogout() {
+  store.dispatch("login/signOut");
+}
 </script>
 
 <template>
@@ -19,7 +20,9 @@ const logoutLink = import.meta.env.VITE_LOGOUT_URL;
       <div class="block justify-self-end">
         <!-- list and search routes links if logged -->
         <div v-if="userLogged">
-          <a :href="logoutLink" class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white">Logout</a>
+          <button @click="doLogout()" class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white" type="button">
+            Logout
+          </button>
         </div>
         <div v-else>
           <button @click="$router.push('/login')" class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white" type="button">

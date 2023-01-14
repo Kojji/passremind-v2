@@ -1,12 +1,10 @@
 import { signInWithEmailAndPassword, setPersistence, inMemoryPersistence, signOut } from "firebase/auth"
-import { doc, getDoc } from "firebase/firestore"
-import { auth, db } from "../../../firebase"
+import { auth } from "../../../firebase"
 import router from '../../router'
 
 const state = {
   idToken: null,
-  logged: false,
-  userData: {displayName :null}
+  logged: false
 }
 
 const mutations = {
@@ -15,9 +13,6 @@ const mutations = {
   },
   setLogged(state, value) {
     state.logged = value;
-  },
-  setUserData(state, value) {
-    state.userData = value;
   }
 }
 
@@ -59,9 +54,6 @@ const getters = {
   },
   getLogged(state) {
     return state.logged;
-  },
-  getUserData(state) {
-    return state.userData;
   }
 }
 

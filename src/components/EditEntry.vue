@@ -14,6 +14,14 @@ let form = reactive({
   mark: false
 });
 
+let passSettings = reactive({
+  range: '8',
+  uppercase: true,
+  lowercase: true,
+  number: true,
+  symbols: false
+});
+
 onMounted(() => {
   form.service = props.entry.service;
   form.login = props.entry.login;
@@ -27,6 +35,22 @@ function createEdit() {
 }
 
 function generatePassword(){
+  if(!passSettings.uppercase && !passSettings.lowercase && !passSettings.number && !passSettings.symbols) return
+  
+  var password = '';
+  let chars = '';
+
+  if(passSettings.uppercase) chars+='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  if(passSettings.lowercase) chars+='abcdefghijklmnopqrstuvwxyz'
+  if(passSettings.number) chars+='01234567890123456789' // numbers duplicated so they have almost the same chance to appear compared to other chars
+  if(passSettings.symbols) chars+='!#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
+  
+  for (var index = 0; index < Number(passSettings.range) - 1; index++) {
+    var character = Math.floor(Math.random() * chars.length);
+    password += chars.substring(character, character + 1);
+  }
+  form.password = password;
+  console.log(passSettings.uppercase, passSettings.lowercase, passSettings.number, passSettings.symbols, passSettings.range)
   console.log('generate pass')
 }
 
@@ -80,24 +104,24 @@ function generatePassword(){
         <div class="p-4 hidden md:block">
           <div class="flex items-center m-2">
             <label for="minmax-range" class="block m-2 text-sm font-medium text-gray-900">4</label>
-            <input id="minmax-range" type="range" min="4" max="16" value="8" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+            <input id="minmax-range" type="range" min="4" max="16" v-model="passSettings.range" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
             <label for="minmax-range" class="block m-2 text-sm font-medium text-gray-900">16</label>
           </div>
           <div class="flex items-center m-2">
-            <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
-            <label for="default-checkbox" class="ml-2 text-sm font-medium text-gray-900">Uppercase</label>
+            <input id="uppercase-checkbox" type="checkbox" v-model="passSettings.uppercase" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
+            <label for="uppercase-checkbox" class="ml-2 text-sm font-medium text-gray-900">Uppercase</label>
           </div>
           <div class="flex items-center m-2">
-            <input checked id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
-            <label for="checked-checkbox" class="ml-2 text-sm font-medium text-gray-900">Lowercase</label>
+            <input id="lowercase-checkbox" type="checkbox" v-model="passSettings.lowercase" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
+            <label for="lowercase-checkbox" class="ml-2 text-sm font-medium text-gray-900">Lowercase</label>
           </div>
           <div class="flex items-center m-2">
-            <input checked id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
-            <label for="checked-checkbox" class="ml-2 text-sm font-medium text-gray-900">Numbers</label>
+            <input id="number-checkbox" type="checkbox" v-model="passSettings.number" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
+            <label for="number-checkbox" class="ml-2 text-sm font-medium text-gray-900">Numbers</label>
           </div>
           <div class="flex items-center m-2">
-            <input checked id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
-            <label for="checked-checkbox" class="ml-2 text-sm font-medium text-gray-900">Symbols</label>
+            <input id="symbols-checkbox" type="checkbox" v-model="passSettings.symbols" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
+            <label for="symbols-checkbox" class="ml-2 text-sm font-medium text-gray-900">Symbols</label>
           </div>
         </div>
       </div>

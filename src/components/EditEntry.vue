@@ -26,6 +26,10 @@ function createEdit() {
   console.log(JSON.parse(JSON.stringify(form)))
 }
 
+function generatePassword(){
+  console.log('generate pass')
+}
+
 </script>
 
 <template>
@@ -47,7 +51,7 @@ function createEdit() {
           <span class="sr-only">Close modal</span>
         </button>
       </div>
-      <div class="grid grid-flow-col grid-cols-2 gap-2 p-3">
+      <div class="grid grid-flow-col grid-cols-1 md:grid-cols-2 gap-2 p-3">
         <div>
           <div class="py-1">
             <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker" type="text" placeholder="Name" v-model="form.service">
@@ -56,32 +60,43 @@ function createEdit() {
             <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker" type="text" placeholder="Login" v-model="form.login">
           </div>
           <div class="py-1">
-            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker" type="text" placeholder="Password" v-model="form.password">
+            <div class="relative text-grey-300">
+              <span class="absolute inset-y-0 right-0 flex items-center pr-1">
+                <button type="submit" @click="generatePassword()" class="p-1 outline-none pr-2">
+                  <svg fill="none" stroke-width="2" viewBox="0 0 24 24" class="w-6 h-6">
+                    <path d="M7 10C5.89543 10 5 10.8954 5 12C5 13.1046 5.89543 14 7 14C8.10457 14 9 13.1046 9 12C9 10.8954 8.10457 10 7 10Z" fill="#c94c26"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M7 6.25C3.82436 6.25 1.25 8.82436 1.25 12C1.25 15.1756 3.82436 17.75 7 17.75C9.18057 17.75 11.0762 16.5363 12.0508 14.75H15.25V17C15.25 17.4142 15.5858 17.75 16 17.75H19.5C19.9142 17.75 20.25 17.4142 20.25 17V14.75H22C22.4142 14.75 22.75 14.4142 22.75 14V11C22.75 10.0335 21.9665 9.25 21 9.25H12.0508C11.0762 7.46371 9.18057 6.25 7 6.25ZM2.75 12C2.75 9.65279 4.65279 7.75 7 7.75C8.74161 7.75 10.2402 8.79769 10.8967 10.3003C11.016 10.5734 11.2859 10.75 11.584 10.75H21C21.1381 10.75 21.25 10.8619 21.25 11V13.25H19.5C19.0858 13.25 18.75 13.5858 18.75 14V16.25H16.75V14C16.75 13.5858 16.4142 13.25 16 13.25H11.584C11.2859 13.25 11.016 13.4266 10.8967 13.6997C10.2402 15.2023 8.74161 16.25 7 16.25C4.65279 16.25 2.75 14.3472 2.75 12Z" fill="#c94c26"/>
+                  </svg>
+                </button>
+              </span>
+              <input type="text" v-model="form.password" class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker" placeholder="Password" autocomplete="off">
+            </div>
+            <!-- <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker" type="text" placeholder="Password" v-model="form.password"> -->
           </div>
           <div class="py-1">
             <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker" type="text" placeholder="Link" v-model="form.serviceLink">
           </div>
         </div>
-        <div class="p-4">
+        <div class="p-4 hidden md:block">
           <div class="flex items-center m-2">
             <label for="minmax-range" class="block m-2 text-sm font-medium text-gray-900">4</label>
             <input id="minmax-range" type="range" min="4" max="16" value="8" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
             <label for="minmax-range" class="block m-2 text-sm font-medium text-gray-900">16</label>
           </div>
           <div class="flex items-center m-2">
-            <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
+            <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
             <label for="default-checkbox" class="ml-2 text-sm font-medium text-gray-900">Uppercase</label>
           </div>
           <div class="flex items-center m-2">
-            <input checked id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
+            <input checked id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
             <label for="checked-checkbox" class="ml-2 text-sm font-medium text-gray-900">Lowercase</label>
           </div>
           <div class="flex items-center m-2">
-            <input checked id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
+            <input checked id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
             <label for="checked-checkbox" class="ml-2 text-sm font-medium text-gray-900">Numbers</label>
           </div>
           <div class="flex items-center m-2">
-            <input checked id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
+            <input checked id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
             <label for="checked-checkbox" class="ml-2 text-sm font-medium text-gray-900">Symbols</label>
           </div>
         </div>

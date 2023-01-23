@@ -1,7 +1,9 @@
 <script setup>
   import { reactive } from 'vue';
   import { useStore } from 'vuex';
+  import { useRouter } from 'vue-router';
 
+  const router = useRouter();
   const store = useStore();
   let loginInputs = reactive({
     email: '',
@@ -20,6 +22,7 @@
       else {alert("Problema ao tentar entrar no sistema, tente mais tarde") }
     }).finally(()=>{
       pageVars.loading = false;
+      router.push('/')
     })
   }
 </script>

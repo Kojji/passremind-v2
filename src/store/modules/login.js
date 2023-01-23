@@ -22,10 +22,9 @@ const actions = {
       setPersistence(auth, inMemoryPersistence)
         .then(() => {
           signInWithEmailAndPassword(auth, form.email, form.password)
-            .then(result => {
+            .then((result) => {
               state.commit("setLogged", true);
               state.commit("setIdToken", result.user.uid);
-              router.push('/');
               res();
             }).catch(() => {
               rej('err1');

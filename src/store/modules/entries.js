@@ -1,3 +1,5 @@
+import { db } from "../../../firebase"
+import { doc, setDoc } from "firebase/firestore"
 
 const state = {
   entries: [],
@@ -25,7 +27,33 @@ const mutations = {
 }
 
 const actions = {
+  checkIfExixts(state, form) {
+    return new Promise((res, rej)=>{
 
+
+      res()
+      // if found
+      // rej('Entry already exists')
+    })
+  },
+  createEntry(state, form) {
+    return new Promise(async (res, rej)=>{
+      try {
+        await setDoc(doc(db, "users", form.idToken, "entries", form.service), {
+          service: form.service,
+          login: form.login,
+          password: form.password,
+          serviceLink: form.serviceLink,
+          mark: form.mark
+        });
+        res()
+
+      } catch(e) {
+        console.log(e.message)
+        rej()
+      }
+    })
+  }
 }
 
 const getters = {

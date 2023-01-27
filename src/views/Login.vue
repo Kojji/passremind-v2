@@ -21,8 +21,8 @@
       if(error === 'err1') { alert("Conta não encontrada") }
       else {alert("Problema ao tentar entrar no sistema, tente mais tarde") }
     }).finally(()=>{
-      pageVars.loading = false;
       router.push('/')
+      pageVars.loading = false;
     })
   }
 </script>

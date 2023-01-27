@@ -1,5 +1,8 @@
 <script setup>
 import { onMounted, reactive } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
 
 const props = defineProps([
   'entry',
@@ -30,8 +33,25 @@ onMounted(() => {
   form.mark = props.entry.mark;
 })
 
-function createEdit() {
-  console.log(JSON.parse(JSON.stringify(form)))
+async function createEdit() {
+  console.log(props.mode)
+  if(props.mode === 'create') {
+    // create
+    try {
+      await store.dispatch('entries/checkIfExixts',{
+        ...JSON.parse(JSON.stringify(form)),
+        idToken: store.getters['login/getIdToken']
+      })
+      await store.dispatch('entries/createEntry', {
+        ...JSON.parse(JSON.stringify(form)),
+        idToken: store.getters['login/getIdToken']  
+      })
+    } catch(e) {
+      console.log(e)
+    }
+  } else {
+    // edit
+  }
 }
 
 function generatePassword(){
@@ -50,8 +70,6 @@ function generatePassword(){
     password += chars.substring(character, character + 1);
   }
   form.password = password;
-  console.log(passSettings.uppercase, passSettings.lowercase, passSettings.number, passSettings.symbols, passSettings.range)
-  console.log('generate pass')
 }
 
 </script>
@@ -95,7 +113,6 @@ function generatePassword(){
               </span>
               <input type="text" v-model="form.password" class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker" placeholder="Password" autocomplete="off">
             </div>
-            <!-- <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker" type="text" placeholder="Password" v-model="form.password"> -->
           </div>
           <div class="py-1">
             <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker" type="text" placeholder="Link" v-model="form.serviceLink">

@@ -1,16 +1,17 @@
 import { db } from "../../../firebase"
-import { doc, setDoc } from "firebase/firestore"
+import { collection, query, doc, setDoc, getDocs } from "firebase/firestore"
 
 const state = {
   entries: [],
   listPage: 1,
   listEntries: [],
   entryObject: {
-    id: 0,
-    cognito_id: '',
+    id: '',
     service: '',
     login: '',
-    password: ''
+    password: '',
+    serviceLink: '',
+    mark: false
   }
 }
 
@@ -39,6 +40,7 @@ const actions = {
   createEntry(state, form) {
     return new Promise(async (res, rej)=>{
       try {
+        // corrigir - encryption
         await setDoc(doc(db, "users", form.idToken, "entries", form.service), {
           service: form.service,
           login: form.login,
@@ -52,6 +54,24 @@ const actions = {
         console.log(e.message)
         rej()
       }
+    })
+  },
+  listEntries(state, form) {
+    return new Promise(async (res, rej)=>{
+      // corrigir - decryption
+      let entryArray = []
+      const entryQuery = query(collection(db, "users", form.idToken, "entries"));
+      const querySnapshot = await getDocs(entryQuery);
+      querySnapshot.forEach((doc) => {
+        // console.log(doc.id, " => ", doc.data());
+        entryArray.push({
+          id: doc.id,
+          ...doc.data()
+        })
+      });
+      console.log(entryArray)
+      state.commit('setListEntries', entryArray)
+      res()
     })
   }
 }

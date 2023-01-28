@@ -6,14 +6,15 @@ import SearchComponent from '/src/components/Search.vue';
 import ListComponent from '/src/components/List.vue';
 import EditModal from '/src/components/EditEntry.vue';
 
-const $axios = inject('axios');
 const store = useStore();
 const route = useRoute();
 
 let modal = reactive({
-  open: false
+  open: false,
+  mode: 'create'
 });
 let form = reactive({
+  id: '',
   service: '',
   login: '',
   password: '',
@@ -36,6 +37,24 @@ function checkToken(token) {
 }
 
 function openCreate() {
+  form.id = '';
+  form.service = '';
+  form.login = '';
+  form.password = '';
+  form.serviceLink = '';
+  form.mark = false;
+  modal.open = true;
+  modal.mode = 'create';
+}
+
+function openEdit(entry) {
+  form.id = entry.id;
+  form.service = entry.service;
+  form.login = entry.login;
+  form.password = entry.password;
+  form.serviceLink = entry.serviceLink;
+  form.mark = entry.mark;
+  modal.mode = 'Edit';
   modal.open = true;
 }
 
@@ -48,7 +67,7 @@ function closeModal(status) {
   <div class="container mx-auto">
     <div v-if="modal.open">
       <div class="fixed z-20 top-0 left-0 w-screen h-screen flex items-center justify-center" style="background-color:rgba(183,158,127,0.4);" @click.self="modal.open = false">
-        <EditModal v-bind:entry="form" v-bind:mode="'create'" @closeModal="closeModal(false)"/>
+        <EditModal v-bind:entry="form" v-bind:mode="modal.mode" @closeModal="closeModal(false)"/>
       </div>
     </div>
     <div>
@@ -63,8 +82,8 @@ function closeModal(status) {
           <a class="inline-block border border-orange-600 rounded py-1 px-3 bg-orange-600 hover:bg-orange-700 text-zinc-100 cursor-pointer" @click="openCreate()" >Create</a>
         </li>
       </ul>
-      <SearchComponent v-if="selected === 'search'" />
-      <ListComponent v-else />
+      <SearchComponent v-if="selected === 'search'" @editEntry="openEdit"/>
+      <ListComponent v-else @editEntry="openEdit" />
     </div>
   </div>
 </template>

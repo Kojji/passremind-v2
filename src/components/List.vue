@@ -1,7 +1,7 @@
 <script setup>
 import { useStore } from 'vuex';
-import { computed, onMounted, ref, inject, reactive } from 'vue';
-const $axios = inject('axios');
+import { computed, onMounted, reactive } from 'vue';
+
 const store = useStore();
 let entries = computed(() => store.getters['entries/getListEntries']);
 let query = reactive({
@@ -18,40 +18,14 @@ onMounted(async () => {
   list()
 })
 
-function list() {
+async function list() {
   loading.value = true;
-  $axios.get(
-    import.meta.env.VITE_API_URL + '/list/',
-    {
-      headers: {
-        'Authorization': 'Bearer ' + store.getters['login/getIdToken'],
-        'Accept' : 'application/json',
-        'key': 'AES_KEY'
-      },
-      params: {
-        'page': query.page,
-        'perPage': 8
-      }
-    }
-  ).then((data)=>{
-    query.total = data.data.query.total;
-    query.prev = data.data.query.previous;
-    query.next = data.data.query.next;
-    console.log(data.data)
-    if(data.data.success) {
-      store.commit('entries/setListEntries', data.data.data)
-    } else {
-
-    }
-    loading.value = false;
-  }).catch((err)=>{
-    console.log(err);
-    loading.value = false;
+  await store.dispatch('entries/listEntries', {
+    page: query.page,
+    perPage: query.perPage,
+    idToken: store.getters['login/getIdToken']
   })
-}
-
-function openCard(entry) {
-  console.log(entry)
+  loading.value = false;
 }
 
 function copyText(text) {
@@ -95,7 +69,7 @@ function checkToken(token) {
       </div>
       <div v-if="(entries.length === 0)" class="p-2 w-full h-full flex items-center justify-center text-zinc-400">no results were found!</div>
       <div v-else class="p-2 grid grid-rows-2 grid-cols-4 gap-2 auto-cols-max h-full">
-        <div v-for="entry of entries" :id="entry.id" class="row-span-1 col-span-1 rounded p-2 flex flex-wrap content-center" style="box-shadow: 0 4px 6px -1px rgba(234, 152, 37, 0.5), 0 2px 4px -1px rgba(234, 152, 37, 0.06);" @click="openCard(entry)">
+        <div v-for="entry of entries" :id="entry.id" class="row-span-1 col-span-1 rounded p-2 flex flex-wrap content-center" style="box-shadow: 0 4px 6px -1px rgba(234, 152, 37, 0.5), 0 2px 4px -1px rgba(234, 152, 37, 0.06);" @click="$emit('editEntry', entry)">
           <p class="text-left font-semibold">{{ entry.service }}</p>
           <div class="w-full flex justify-between">
             <p>{{(entry.login.length > 14 ? entry.login.slice(0,12) + '...' : entry.login)}}</p>

@@ -26,6 +26,7 @@ let passSettings = reactive({
 });
 
 onMounted(() => {
+  form.id = props.entry.id;
   form.service = props.entry.service;
   form.login = props.entry.login;
   form.password = props.entry.password;
@@ -38,6 +39,7 @@ async function createEdit() {
   if(props.mode === 'create') {
     // create
     try {
+      // corrigir - loading
       await store.dispatch('entries/checkIfExixts',{
         ...JSON.parse(JSON.stringify(form)),
         idToken: store.getters['login/getIdToken']

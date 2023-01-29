@@ -56,6 +56,7 @@ async function createEdit() {
       emit('closeModal');
     } catch(e) {
       pageVars.loading = false
+      // corrigir - notification
       console.log(e)
     }
 
@@ -154,7 +155,7 @@ function generatePassword(){
       </div>
 
       <div class="flex items-center justify-end p-2 space-x-2 border-t border-orange-300 rounded-b">
-        <button data-modal-toggle="defaultModal" type="button" @click="$emit('closeModal')" class="text-orange-600 hover:text-orange-800 bg-white hover:bg-gray-100 rounded-lg border border-orange-600 text-sm font-medium px-3 py-2 hover:text-gray-900">Cancel</button>
+        <button data-modal-toggle="defaultModal" type="button" @click="$emit('closeModal')" class="text-orange-600 hover:text-orange-800 bg-white hover:bg-zinc-200 rounded-lg border border-orange-600 text-sm font-medium px-3 py-2">Cancel</button>
         <button v-if="!pageVars.loading" data-modal-toggle="defaultModal" type="button" @click="createEdit()" class="bg-orange-600 text-zinc-100 hover:bg-orange-800 font-medium rounded-lg text-sm px-3 py-2 text-center">{{props.mode === 'create' ? 'Create' : 'Edit'}}</button>
         <button v-else disabled type="button" class="bg-zinc-200 text-zinc-600 font-medium rounded-lg text-sm px-3 py-2 text-center">
           <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-2 text-gray-200 animate-spin dark:text-gray-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">

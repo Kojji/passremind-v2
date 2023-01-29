@@ -1,5 +1,5 @@
 import { db } from "../../../firebase"
-import { collection, query, doc, setDoc, getDocs } from "firebase/firestore"
+import { collection, query, doc, setDoc, where, limit, getDocs } from "firebase/firestore"
 
 const state = {
   entries: [],
@@ -29,12 +29,15 @@ const mutations = {
 
 const actions = {
   checkIfExixts(state, form) {
-    return new Promise((res, rej)=>{
+    return new Promise(async (res, rej)=>{
+      const queryRef = query(collection(db, "users", form.idToken, "entries"), where("service", "==", form.service), limit(1));
 
-
-      res()
-      // if found
-      // rej('Entry already exists')
+      const querySnapshot = await getDocs(queryRef);
+      if(querySnapshot.docs.length > 0) {
+        rej('Entry already exists')
+      } else {
+        res()
+      }
     })
   },
   createEntry(state, form) {

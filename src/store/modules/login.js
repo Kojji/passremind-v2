@@ -1,6 +1,11 @@
-import { signInWithEmailAndPassword, setPersistence, inMemoryPersistence, signOut } from "firebase/auth"
+import {
+  signInWithEmailAndPassword,
+  setPersistence,
+  inMemoryPersistence,
+  signOut,
+  onAuthStateChanged
+} from "firebase/auth"
 import { auth } from "../../../firebase"
-import router from '../../router'
 
 const state = {
   idToken: null,
@@ -38,12 +43,25 @@ const actions = {
         .then(() => {
           state.commit("setLogged", false);
           state.commit("setIdToken", null);
-          router.push('/login');
+          // router.push('/login');
           res();
         }).catch(() => {
           rej();
         });
     });
+  },
+  checkToken(state) {
+    return new Promise(async (res, rej)=>{
+      await onAuthStateChanged(auth, (user) => {
+        if(user) {
+          state.commit("setLogged", true)
+          state.commit("setIdToken", user.uid)
+          res()
+        } else {
+          rej({message: 'User not logged in!'})
+        }
+      })
+    })
   }
 }
 

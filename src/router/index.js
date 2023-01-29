@@ -8,11 +8,11 @@ const routes = [
     component: function () {
       return import('../views/Entries.vue')
     },
-    beforeEnter: () => {
-      if(!store.getters['login/getLogged'] && !store.getters['login/getIdToken']) {
-        return {path: '/login'}
-      }
-    }
+    // beforeEnter: () => {
+    //   if(!store.getters['login/getLogged'] && !store.getters['login/getIdToken']) {
+    //     return {path: '/login'}
+    //   }
+    // }
   },
   {
     path: '/login',

@@ -1,13 +1,13 @@
 <script setup>
 import { computed, ref, onMounted, inject, reactive } from 'vue';
 import { useStore } from 'vuex';
-import { useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 import SearchComponent from '/src/components/Search.vue';
 import ListComponent from '/src/components/List.vue';
 import EditModal from '/src/components/EditEntry.vue';
 
 const store = useStore();
-const route = useRoute();
+const router = useRouter();
 
 let modal = reactive({
   open: false,
@@ -24,16 +24,16 @@ let form = reactive({
 let selected = ref('search');
 
 onMounted(() => {
-  // console.log(store.getters['login/getCode'])
-  // console.log(store.getters['login/getLogged'])
-  // check token, if not valid redirect to logout
   checkToken(store.getters['login/getIdToken'])
-
 })
 
 
 function checkToken(token) {
-  console.log(token)
+  store.dispatch('login/checkToken', token)
+    .catch((e)=>{
+      // console.log(e.message)
+      router.push('/login')
+    })
 }
 
 function openCreate() {

@@ -79,7 +79,7 @@ function closeModal(status) {
           <a :class="selected === 'list' ? 'bg-white inline-block border-l border-t border-r border-orange-800 rounded-t py-2 px-4 text-orange-300 font-semibold' : 'bg-white inline-block py-2 px-4 text-orange-600 hover:text-orange-800 font-semibold cursor-pointer'" @click="selected = 'list'">List</a>
         </li>
         <li class="-mb-px w-full flex justify-end mb-1 mr-2">
-          <a class="inline-block border border-orange-600 rounded py-1 px-3 bg-orange-600 hover:bg-orange-700 text-zinc-100 cursor-pointer" @click="openCreate()" >Create</a>
+          <a class="inline-block border border-orange-600 rounded py-1 px-3 bg-orange-600 hover:bg-orange-800 text-zinc-100 cursor-pointer" @click="openCreate()" >Create</a>
         </li>
       </ul>
       <SearchComponent v-if="selected === 'search'" @editEntry="openEdit"/>

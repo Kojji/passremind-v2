@@ -1,5 +1,7 @@
-import { db } from "../../../firebase"
+import { db, functions } from "../../../firebase"
 import { collection, query, doc, setDoc, where, limit, getDocs } from "firebase/firestore"
+import { httpsCallable } from "firebase/functions";
+import SimpleCrypto from "simple-crypto-js";
 
 const state = {
   entries: [],
@@ -43,11 +45,16 @@ const actions = {
   createEntry(state, form) {
     return new Promise(async (res, rej)=>{
       try {
-        // corrigir - encryption
+        const getEncKey = httpsCallable(functions, 'getPassEnc');
+        let resultEncKey = await getEncKey();
+        if(!resultEncKey || !resultEncKey.data) {
+          throw new Error("Encryption key not found!")
+        }
+        let simpleEnc = new SimpleCrypto(resultEncKey.data);
         await setDoc(doc(db, "users", form.idToken, "entries", form.service), {
           service: form.service,
-          login: form.login,
-          password: form.password,
+          login: simpleEnc.encrypt(form.login),
+          password: simpleEnc.encrypt(form.password),
           serviceLink: form.serviceLink,
           mark: form.mark
         });
@@ -61,15 +68,24 @@ const actions = {
   },
   listEntries(state, form) {
     return new Promise(async (res, rej)=>{
-      // corrigir - decryption
+      const getEncKey = httpsCallable(functions, 'getPassEnc');
+      let resultEncKey = await getEncKey();
+      if(!resultEncKey || !resultEncKey.data) {
+        throw new Error("Encryption key not found!")
+      }
+      let simpleEnc = new SimpleCrypto(resultEncKey.data);
       let entryArray = []
       const entryQuery = query(collection(db, "users", form.idToken, "entries"));
       const querySnapshot = await getDocs(entryQuery);
       querySnapshot.forEach((doc) => {
-        // console.log(doc.id, " => ", doc.data());
+        let entryData = doc.data()
         entryArray.push({
           id: doc.id,
-          ...doc.data()
+          service: entryData.service,
+          login: simpleEnc.decrypt(entryData.login),
+          password: simpleEnc.decrypt(entryData.password),
+          serviceLink: entryData.serviceLink,
+          mark: entryData.mark
         })
       });
       console.log(entryArray)

@@ -1,6 +1,5 @@
 # Firebase Config
 .firebaserc
-firebaseConfig.js
 .env
 
 # Logs

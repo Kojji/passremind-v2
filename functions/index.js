@@ -1,9 +1,12 @@
-const functions = require("firebase-functions");
+const functions = require('firebase-functions')
+const crypto = require("crypto-js");
 
-// // Create and deploy your first functions
-// // https://firebase.google.com/docs/functions/get-started
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+exports.getPassEnc = functions.https.onCall((data, context)=>{
+  return new Promise((res, rej) => {
+    let key = crypto.SHA256(context.auth.uid);
+    let derivation = crypto.PBKDF2(key, process.env.SEED_SALT, {
+      keySize: 128 / 32
+    });
+    res(derivation.toString());
+  })
+})

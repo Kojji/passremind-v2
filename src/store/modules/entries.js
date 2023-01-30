@@ -31,12 +31,18 @@ const mutations = {
 
 const actions = {
   checkIfExixts(state, form) {
+    console.log(form)
     return new Promise(async (res, rej)=>{
       const queryRef = query(collection(db, "users", form.idToken, "entries"), where("service", "==", form.service), limit(1));
 
       const querySnapshot = await getDocs(queryRef);
       if(querySnapshot.docs.length > 0) {
-        rej('Entry already exists')
+        console.log(querySnapshot.docs[0].id)
+        if(querySnapshot.docs[0].id !== form.id) {
+          rej('Entry already exists')
+        } else {
+          res()
+        }
       } else {
         res()
       }
@@ -52,6 +58,30 @@ const actions = {
         }
         let simpleEnc = new SimpleCrypto(resultEncKey.data);
         await setDoc(doc(db, "users", form.idToken, "entries", form.service), {
+          service: form.service,
+          login: simpleEnc.encrypt(form.login),
+          password: simpleEnc.encrypt(form.password),
+          serviceLink: form.serviceLink,
+          mark: form.mark
+        });
+        res()
+
+      } catch(e) {
+        console.log(e.message)
+        rej()
+      }
+    })
+  },
+  editEntry(state, form) {
+    return new Promise(async (res, rej)=>{
+      try {
+        const getEncKey = httpsCallable(functions, 'getPassEnc');
+        let resultEncKey = await getEncKey();
+        if(!resultEncKey || !resultEncKey.data) {
+          throw new Error("Encryption key not found!")
+        }
+        let simpleEnc = new SimpleCrypto(resultEncKey.data);
+        await setDoc(doc(db, "users", form.idToken, "entries", form.id), {
           service: form.service,
           login: simpleEnc.encrypt(form.login),
           password: simpleEnc.encrypt(form.password),

@@ -41,7 +41,6 @@ onMounted(() => {
 
 async function createEdit() {
   if(props.mode === 'create') {
-    // create
     try {
       pageVars.loading = true
       await store.dispatch('entries/checkIfExixts',{
@@ -56,12 +55,29 @@ async function createEdit() {
       emit('closeModal');
     } catch(e) {
       pageVars.loading = false
-      // corrigir - notification
+      // corrigir - notification and page reload
       console.log(e)
     }
 
   } else {
     // edit
+    try {
+      pageVars.loading = true
+      await store.dispatch('entries/checkIfExixts',{
+        ...JSON.parse(JSON.stringify(form)),
+        idToken: store.getters['login/getIdToken']
+      })
+      await store.dispatch('entries/editEntry', {
+        ...JSON.parse(JSON.stringify(form)),
+        idToken: store.getters['login/getIdToken']  
+      })
+      pageVars.loading = false
+      emit('closeModal');
+    } catch(e) {
+      pageVars.loading = false
+      // corrigir - notification and page reload
+      console.log(e)
+    }
   }
 }
 

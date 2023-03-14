@@ -29,13 +29,15 @@ async function list() {
 }
 
 function copyText(text) {
-  console.log(text)
+  let information = {
+    duration: 3,
+    message: "Password copied to clipboard",
+    type: "success"
+  }
   navigator.clipboard.writeText(text)
     .then(()=>{
-      console.log("Copiado")
+      store.dispatch('misc/activateNotification', information)
     })
-  
-  //corrigir - avisar que foi copiado
 }
 
 function checkToken(token) {

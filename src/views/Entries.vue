@@ -11,7 +11,8 @@ const router = useRouter();
 
 let modal = reactive({
   open: false,
-  mode: 'create'
+  mode: 'create',
+  propagateRefresh: false
 });
 let form = reactive({
   id: '',
@@ -58,8 +59,9 @@ function openEdit(entry) {
   modal.open = true;
 }
 
-function closeModal(status) {
+function closeModal(refresh) {
   modal.open = false
+  if(refresh) modal.propagateRefresh = true
 }
 </script>
 
@@ -67,7 +69,7 @@ function closeModal(status) {
   <div class="container mx-auto">
     <div v-if="modal.open">
       <div class="fixed z-20 top-0 left-0 w-screen h-screen flex items-center justify-center" style="background-color:rgba(183,158,127,0.4);" @click.self="modal.open = false">
-        <EditModal v-bind:entry="form" v-bind:mode="modal.mode" @closeModal="closeModal(false)"/>
+        <EditModal v-bind:entry="form" v-bind:mode="modal.mode" @closeModal="closeModal"/>
       </div>
     </div>
     <div>
@@ -83,7 +85,7 @@ function closeModal(status) {
         </li>
       </ul>
       <SearchComponent v-if="selected === 'search'" @editEntry="openEdit"/>
-      <ListComponent v-else @editEntry="openEdit" />
+      <ListComponent v-else @editEntry="openEdit" v-bind:refresh="modal.propagateRefresh" @refreshed="modal.propagateRefresh = false"/>
     </div>
   </div>
 </template>

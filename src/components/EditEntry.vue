@@ -57,9 +57,8 @@ async function createEdit() {
         idToken: store.getters['login/getIdToken']  
       })
       pageVars.loading = false
-      emit('closeModal');
+      emit('closeModal', true);
       store.dispatch('misc/activateNotification', information);
-      // page reload
     } catch(e) {
       pageVars.loading = false
       if(e.code === 1) {
@@ -85,10 +84,10 @@ async function createEdit() {
         idToken: store.getters['login/getIdToken']  
       })
       pageVars.loading = false
-      emit('closeModal');
+      emit('closeModal', true);
     } catch(e) {
       pageVars.loading = false
-      // corrigir - notification and page reload
+      // corrigir - notification 
       console.log(e)
     }
   }
@@ -123,7 +122,7 @@ function generatePassword(){
         </h3>
         <button type="button"
           class="text-orange-600 bg-transparent hover:bg-orange-600 hover:text-white rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
-          @click="$emit('closeModal')">
+          @click="$emit('closeModal', false)">
           <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd"
@@ -184,7 +183,7 @@ function generatePassword(){
       </div>
 
       <div class="flex items-center justify-end p-2 space-x-2 border-t border-orange-300 rounded-b">
-        <button data-modal-toggle="defaultModal" type="button" @click="$emit('closeModal')" class="text-orange-600 hover:text-orange-800 bg-white hover:bg-zinc-200 rounded-lg border border-orange-600 text-sm font-medium px-3 py-2">Cancel</button>
+        <button data-modal-toggle="defaultModal" type="button" @click="$emit('closeModal', false)" class="text-orange-600 hover:text-orange-800 bg-white hover:bg-zinc-200 rounded-lg border border-orange-600 text-sm font-medium px-3 py-2">Cancel</button>
         <button v-if="!pageVars.loading" data-modal-toggle="defaultModal" type="button" @click="createEdit()" class="bg-orange-600 text-zinc-100 hover:bg-orange-800 font-medium rounded-lg text-sm px-3 py-2 text-center">{{props.mode === 'create' ? 'Create' : 'Edit'}}</button>
         <button v-else disabled type="button" class="bg-zinc-200 text-zinc-600 font-medium rounded-lg text-sm px-3 py-2 text-center">
           <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-2 text-gray-200 animate-spin dark:text-gray-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">

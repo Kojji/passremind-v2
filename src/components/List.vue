@@ -1,6 +1,18 @@
 <script setup>
 import { useStore } from 'vuex';
-import { computed, onMounted, reactive } from 'vue';
+import { computed, onMounted, reactive, watch, ref } from 'vue';
+
+const emit = defineEmits(['refreshed']);
+const props = defineProps([
+  'refresh'
+])
+
+watch(() => props.refresh, (curr, old) => {
+  if(curr) {
+    list(true)
+    emit("refreshed")
+  }
+})
 
 const store = useStore();
 let entries = computed(() => store.getters['entries/getListEntries']);

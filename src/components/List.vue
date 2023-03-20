@@ -31,13 +31,18 @@ async function list() {
 function copyText(text) {
   let information = {
     duration: 3,
-    message: "Password copied to clipboard",
+    message: "Password copied to clipboard!",
     type: "success"
   }
   navigator.clipboard.writeText(text)
     .then(()=>{
       store.dispatch('misc/activateNotification', information)
     })
+}
+
+function toggleMark(index) {
+  let idToken = store.getters['login/getIdToken']
+  store.dispatch('entries/toggleMark', {idToken, index})
 }
 
 function checkToken(token) {
@@ -71,15 +76,19 @@ function checkToken(token) {
       </div>
       <div v-if="(entries.length === 0)" class="p-2 w-full h-full flex items-center justify-center text-zinc-400">no results were found!</div>
       <div v-else class="p-2 grid grid-rows-2 grid-cols-4 gap-2 auto-cols-max h-full">
-        <div v-for="entry of entries" :id="entry.id" class="row-span-1 col-span-1 rounded p-2 flex flex-wrap content-center" style="box-shadow: 0 4px 6px -1px rgba(234, 152, 37, 0.5), 0 2px 4px -1px rgba(234, 152, 37, 0.06);" @click="$emit('editEntry', entry)">
+        <div v-for="entry, index in entries" :id="entry.id" class="row-span-1 col-span-1 rounded p-2 flex flex-wrap content-center" style="box-shadow: 0 4px 6px -1px rgba(234, 152, 37, 0.5), 0 2px 4px -1px rgba(234, 152, 37, 0.06);" @click="$emit('editEntry', entry)">
           <p class="text-left font-semibold">{{ entry.service }}</p>
+          <div class="w-full flex justify-between" style="color: orangered;">
+            <font-awesome-icon v-if="entry.mark" class="cursor-pointer" icon="fa-solid fa-bookmark" @click.stop="toggleMark(index)"/>
+            <font-awesome-icon v-else class="cursor-pointer" icon="fa-regular fa-bookmark" @click.stop="toggleMark(index)"/>
+          </div>
           <div class="w-full flex justify-between">
             <p>{{(entry.login.length > 14 ? entry.login.slice(0,12) + '...' : entry.login)}}</p>
-            <font-awesome-icon class="cursor-pointer" icon="fa-solid fa-copy" @click.stop="copyText(entry.login)"/>
+            <font-awesome-icon style="color: orangered;" class="cursor-pointer" icon="fa-regular fa-clone" @click.stop="copyText(entry.login)"/>
           </div>
           <div class="w-full flex justify-between">
             <p>{{entry.password.replace(/./g, '*')}}</p>
-            <font-awesome-icon class="cursor-pointer" icon="fa-solid fa-copy" @click.stop="copyText(entry.password)"/>
+            <font-awesome-icon style="color: orangered;" class="cursor-pointer" icon="fa-regular fa-clone" @click.stop="copyText(entry.password)"/>
           </div>
         </div>
       </div>

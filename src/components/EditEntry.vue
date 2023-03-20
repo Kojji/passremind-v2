@@ -41,6 +41,11 @@ onMounted(() => {
 
 async function createEdit() {
   if(props.mode === 'create') {
+    let information = {
+      duration: 3,
+      message: "New password registered!",
+      type: "success"
+    }
     try {
       pageVars.loading = true
       await store.dispatch('entries/checkIfExixts',{
@@ -53,9 +58,17 @@ async function createEdit() {
       })
       pageVars.loading = false
       emit('closeModal');
+      store.dispatch('misc/activateNotification', information);
+      // page reload
     } catch(e) {
       pageVars.loading = false
-      // corrigir - notification and page reload
+      if(e.code === 1) {
+        information.type = "fail"
+        information.message = "An Entry with the same name already exists!"
+        store.dispatch('misc/activateNotification', information);
+        // corrigir - index of notification class
+      }
+      // corrigir - notification error
       console.log(e)
     }
 

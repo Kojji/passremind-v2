@@ -1,5 +1,5 @@
 import { db, functions } from "../../../firebase"
-import { collection, query, doc, setDoc, where, limit, getDocs, updateDoc } from "firebase/firestore"
+import { collection, query, doc, setDoc, where, limit, getDocs, updateDoc, getCountFromServer } from "firebase/firestore"
 import { httpsCallable } from "firebase/functions";
 import SimpleCrypto from "simple-crypto-js";
 
@@ -14,7 +14,8 @@ const state = {
     password: '',
     serviceLink: '',
     mark: false
-  }
+  },
+  totalListEntries: 0
 }
 
 const mutations = {
@@ -26,6 +27,9 @@ const mutations = {
   },
   setListEntries(state, value) {
     state.listEntries = value;
+  },
+  setTotalListEntries(state, value) {
+    state.totalListEntries = value;
   }
 }
 
@@ -105,6 +109,8 @@ const actions = {
       let simpleEnc = new SimpleCrypto(resultEncKey.data);
       let entryArray = []
       const entryQuery = query(collection(db, "users", form.idToken, "entries"));
+      const countSnapshot = await getCountFromServer(entryQuery);
+      state.commit('setTotalListEntries', countSnapshot.data().count);
       const querySnapshot = await getDocs(entryQuery);
       querySnapshot.forEach((doc) => {
         let entryData = doc.data()
@@ -124,13 +130,17 @@ const actions = {
   },
   toggleMark(state, {idToken, index}) {
     return new Promise(async (res, rej)=>{
-      let copy = state.getters["getListEntries"]
-      await updateDoc(doc(db, "users", idToken, "entries", copy[index].id), {
-        mark: !copy[index].mark
-      });
-      copy[index].mark = !copy[index].mark
-      state.commit('setListEntries', copy)
-      res()
+      try {
+        let copy = state.getters["getListEntries"]
+        await updateDoc(doc(db, "users", idToken, "entries", copy[index].id), {
+          mark: !copy[index].mark
+        });
+        copy[index].mark = !copy[index].mark
+        state.commit('setListEntries', copy)
+        res(copy[index].mark)
+      } catch(err) {
+        rej(err.message)
+      }
     })
   }
 }
@@ -144,6 +154,9 @@ const getters = {
   },
   getListEntries(state) {
     return state.listEntries;
+  },
+  getTotalListEntries(state) {
+    return state.totalListEntries;
   }
 }
 

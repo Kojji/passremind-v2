@@ -1,5 +1,18 @@
 import { db, functions } from "../../../firebase"
-import { collection, query, doc, setDoc, where, limit, getDocs, updateDoc, getCountFromServer } from "firebase/firestore"
+import {
+  query,
+  where,
+  limit,
+  startAfter,
+  endBefore,
+  getDoc,
+  getDocs,
+  setDoc,
+  updateDoc,
+  collection,
+  doc,
+  getCountFromServer,
+} from "firebase/firestore"
 import { httpsCallable } from "firebase/functions";
 import SimpleCrypto from "simple-crypto-js";
 
@@ -108,9 +121,68 @@ const actions = {
       }
       let simpleEnc = new SimpleCrypto(resultEncKey.data);
       let entryArray = []
-      const entryQuery = query(collection(db, "users", form.idToken, "entries"));
-      const countSnapshot = await getCountFromServer(entryQuery);
+      const entryQuery = query(collection(db, "users", form.idToken, "entries"), limit(state.getters['getConstLimitPerPage']));
+      const countSnapshot = await getCountFromServer(query(collection(db, "users", form.idToken, "entries")));
       state.commit('setTotalListEntries', countSnapshot.data().count);
+      state.commit('setListPage', 1);
+      const querySnapshot = await getDocs(entryQuery);
+      querySnapshot.forEach((doc) => {
+        let entryData = doc.data()
+        entryArray.push({
+          id: doc.id,
+          service: entryData.service,
+          login: simpleEnc.decrypt(entryData.login),
+          password: simpleEnc.decrypt(entryData.password),
+          serviceLink: entryData.serviceLink,
+          mark: entryData.mark
+        })
+      });
+      state.commit('setListEntries', entryArray)
+      res()
+    })
+  },
+  paginateUp(state, form) {
+    return new Promise(async (res, rej)=>{
+      const getEncKey = httpsCallable(functions, 'getPassEnc');
+      let resultEncKey = await getEncKey();
+      if(!resultEncKey || !resultEncKey.data) {
+        throw new Error("Encryption key not found!")
+      }
+      let simpleEnc = new SimpleCrypto(resultEncKey.data);
+      let entryArray = []
+      console.log(state.getters['getListEntries'][state.getters['getListEntries'].length - 1].id)
+
+      const docSnap = await getDoc(doc(db, "users", form.idToken, "entries", state.getters['getListEntries'][state.getters['getListEntries'].length - 1].id));
+      const entryQuery = query(collection(db, "users", form.idToken, "entries"), limit(state.getters['getConstLimitPerPage']), startAfter(docSnap));
+      state.commit('setListPage', form.page);
+      const querySnapshot = await getDocs(entryQuery);
+      querySnapshot.forEach((doc) => {
+        let entryData = doc.data()
+        entryArray.push({
+          id: doc.id,
+          service: entryData.service,
+          login: simpleEnc.decrypt(entryData.login),
+          password: simpleEnc.decrypt(entryData.password),
+          serviceLink: entryData.serviceLink,
+          mark: entryData.mark
+        })
+      });
+      state.commit('setListEntries', entryArray)
+      res()
+    })
+  },
+  paginateDown(state, form) {
+    return new Promise(async (res, rej)=>{
+      const getEncKey = httpsCallable(functions, 'getPassEnc');
+      let resultEncKey = await getEncKey();
+      if(!resultEncKey || !resultEncKey.data) {
+        throw new Error("Encryption key not found!")
+      }
+      let simpleEnc = new SimpleCrypto(resultEncKey.data);
+      let entryArray = []
+      const docSnap = await getDoc(doc(db, "users", form.idToken, "entries", state.getters['getListEntries'][state.getters['getListEntries'].length - 1].id));
+      const entryQuery = query(collection(db, "users", form.idToken, "entries"), limit(state.getters['getConstLimitPerPage']), endBefore(docSnap));
+      state.commit('setListPage', form.page);
       const querySnapshot = await getDocs(entryQuery);
       querySnapshot.forEach((doc) => {
         let entryData = doc.data()
@@ -157,7 +229,11 @@ const getters = {
   },
   getTotalListEntries(state) {
     return state.totalListEntries;
-  }
+  },
+  getConstLimitPerPage() {
+    return 8;
+  },
+
 }
 
 export default {

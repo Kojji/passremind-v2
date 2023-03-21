@@ -176,11 +176,7 @@ function checkToken(token) {
         <div
           v-for="(entry, index) in entries"
           :id="entry.id"
-          class="row-span-1 col-span-1 rounded p-2 flex flex-wrap content-start min-h-min"
-          style="
-            box-shadow: 0 4px 6px -1px rgba(234, 152, 37, 0.5),
-              0 2px 4px -1px rgba(234, 152, 37, 0.06);
-          "
+          class="row-span-1 col-span-1 rounded p-2 flex flex-wrap content-start min-h-min border rounded leading-tight"
           @click="$emit('editEntry', entry)"
         >
           <div class="w-full flex justify-end" style="color: orangered">

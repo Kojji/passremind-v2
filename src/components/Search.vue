@@ -157,7 +157,13 @@ function toggleMark(index) {
               @click.stop="toggleMark(index)"
             />
           </div>
-          <p class="text-left font-semibold py-2">{{ entry.service }}</p>
+          <p class="text-left font-semibold py-2">
+            {{
+              entry.service.length > 16
+                ? entry.service.slice(0, 14) + "..."
+                : entry.service
+            }}
+          </p>
           <div class="w-full flex justify-between">
             <p>
               {{

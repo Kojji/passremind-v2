@@ -19,13 +19,6 @@ const store = useStore();
 let entries = computed(() => store.getters["entries/getListEntries"]);
 let totalEntries = computed(() => store.getters["entries/getTotalListEntries"]);
 let listPage = computed(() => store.getters["entries/getListPage"]);
-let query = reactive({
-  page: 1,
-  perPage: 8,
-  next: false,
-  prev: false,
-  total: 0,
-});
 let loading = reactive({ value: true });
 
 onMounted(async () => {
@@ -42,7 +35,6 @@ async function list() {
 }
 
 async function paginate(newPage) {
-  console.log(newPage, listPage.value);
   loading.value = true;
   if (newPage > listPage.value) {
     await store.dispatch("entries/paginateUp", {
@@ -120,7 +112,7 @@ function checkToken(token) {
                 ? 'px-4 py-2 text-sm font-medium text-zinc-700 bg-zinc-200 rounded-l hover:bg-zinc-500 hover:text-zinc-200'
                 : 'px-4 py-2 text-sm font-medium text-white bg-zinc-100 rounded-l cursor-not-allowed'
             "
-            @click="paginate(listPage - 1)"
+            @click="(listPage - 1) * 8 + 1 > 1 ? paginate(listPage - 1) : null"
           >
             Prev
           </button>
@@ -130,7 +122,11 @@ function checkToken(token) {
                 ? 'px-4 py-2 text-sm font-medium text-zinc-700 bg-zinc-200 border-0 border-l border-white rounded-r hover:bg-zinc-500 hover:text-zinc-200'
                 : 'px-4 py-2 text-sm font-medium text-white bg-zinc-100 border-0 border-l border-white rounded-r cursor-not-allowed'
             "
-            @click="paginate(listPage + 1)"
+            @click="
+              totalEntries > (listPage - 1) * 8 + entries.length
+                ? paginate(listPage + 1)
+                : null
+            "
           >
             Next
           </button>
@@ -193,7 +189,13 @@ function checkToken(token) {
               @click.stop="toggleMark(index)"
             />
           </div>
-          <p class="text-left font-semibold py-2">{{ entry.service }}</p>
+          <p class="text-left font-semibold py-2">
+            {{
+              entry.service.length > 16
+                ? entry.service.slice(0, 14) + "..."
+                : entry.service
+            }}
+          </p>
           <div class="w-full flex justify-between">
             <p>
               {{

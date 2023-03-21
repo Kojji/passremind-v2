@@ -176,8 +176,6 @@ const actions = {
     return new Promise(async (res, rej)=>{
       let simpleEnc = new SimpleCrypto(state.getters["getEncKey"]);
       let entryArray = []
-      console.log(state.getters['getListEntries'][state.getters['getListEntries'].length - 1].id)
-
       const docSnap = await getDoc(doc(db, "users", form.idToken, "entries", state.getters['getListEntries'][state.getters['getListEntries'].length - 1].id));
       const entryQuery = query(collection(db, "users", form.idToken, "entries"), orderBy("service"), limit(state.getters['getConstLimitPerPage']), startAfter(docSnap));
       state.commit('setListPage', form.page);

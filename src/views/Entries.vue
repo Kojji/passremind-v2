@@ -84,7 +84,7 @@ function closeModal(refresh) {
       </div>
     </div>
     <div>
-      <ul class="flex border-b border-orange-800 mb-2">
+      <ul class="flex border-b border-orange-800 my-2">
         <li class="-mb-px mr-1">
           <a
             :class="

@@ -2,7 +2,7 @@
 import { useStore } from "vuex";
 import { computed, onMounted, reactive, watch, ref } from "vue";
 
-const emit = defineEmits(["refreshed"]);
+const emit = defineEmits(["refreshed", "editEntry"]);
 const props = defineProps(["refresh"]);
 
 watch(
@@ -70,7 +70,7 @@ function toggleMark(index) {
 <template>
   <div class="grid grid-flow-col grid-rows-4 gap-3">
     <div class="row-span-1 col-span-1 flex items-center justify-center">
-      <div class="relative text-grey-300">
+      <div class="relative text-grey-300 py-4">
         <span class="absolute inset-y-0 right-0 flex items-center pr-1">
           <button
             type="submit"

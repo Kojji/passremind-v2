@@ -2,7 +2,7 @@
 import { useStore } from "vuex";
 import { computed, onMounted, reactive, watch, ref } from "vue";
 
-const emit = defineEmits(["refreshed"]);
+const emit = defineEmits(["refreshed", "editEntry"]);
 const props = defineProps(["refresh"]);
 
 watch(

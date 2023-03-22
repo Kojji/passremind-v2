@@ -12,6 +12,7 @@ import {
   getDocs,
   setDoc,
   updateDoc,
+  deleteDoc,
   collection,
   doc,
   getCountFromServer,
@@ -229,6 +230,16 @@ const actions = {
         copy[index].mark = !copy[index].mark
         state.commit('setListEntries', copy)
         res(copy[index].mark)
+      } catch(err) {
+        rej(err.message)
+      }
+    })
+  },
+  deleteEntry(state, {idToken, idEntry}) {
+    return new Promise(async (res, rej)=>{
+      try {
+        await deleteDoc(doc(db, "users", idToken, "entries", idEntry));
+        res()
       } catch(err) {
         rej(err.message)
       }

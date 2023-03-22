@@ -131,7 +131,7 @@ const actions = {
     return new Promise(async (res, rej)=>{
       let simpleEnc = new SimpleCrypto(state.getters["getEncKey"]);
       let entryArray = []
-      const entryQuery = query(collection(db, "users", form.idToken, "entries"), orderBy("service"), startAt(form.search), endAt(form.search+'\uf8ff'), limit(state.getters['getConstLimitPerPage']));
+      const entryQuery = query(collection(db, "users", form.idToken, "entries"), orderBy("service"), startAt(form.search), endAt(form.search + '\uf8ff'), limit(state.getters['getConstLimitPerPage']));
       const querySnapshot = await getDocs(entryQuery);
       querySnapshot.forEach((doc) => {
         let entryData = doc.data()
@@ -152,8 +152,13 @@ const actions = {
     return new Promise(async (res, rej)=>{
       let simpleEnc = new SimpleCrypto(state.getters["getEncKey"]);
       let entryArray = []
-      const entryQuery = query(collection(db, "users", form.idToken, "entries"), orderBy("service"), limit(state.getters['getConstLimitPerPage']));
-      const countSnapshot = await getCountFromServer(query(collection(db, "users", form.idToken, "entries")));
+      const entryQuery = form.type === "list" 
+        ? query(collection(db, "users", form.idToken, "entries"), orderBy("service"), limit(state.getters['getConstLimitPerPage']))
+        : query(collection(db, "users", form.idToken, "entries"), where("mark", "==", true), orderBy("service"), limit(state.getters['getConstLimitPerPage']));
+      const countSnapshot = await getCountFromServer(
+        form.type === "list"
+          ? query(collection(db, "users", form.idToken, "entries")) 
+          : query(collection(db, "users", form.idToken, "entries"), where("mark", "==", true)));
       state.commit('setTotalListEntries', countSnapshot.data().count);
       state.commit('setListPage', 1);
       const querySnapshot = await getDocs(entryQuery);
@@ -178,7 +183,9 @@ const actions = {
       let simpleEnc = new SimpleCrypto(state.getters["getEncKey"]);
       let entryArray = []
       const docSnap = await getDoc(doc(db, "users", form.idToken, "entries", state.getters['getListEntries'][state.getters['getListEntries'].length - 1].id));
-      const entryQuery = query(collection(db, "users", form.idToken, "entries"), orderBy("service"), limit(state.getters['getConstLimitPerPage']), startAfter(docSnap));
+      const entryQuery = form.type === "list" 
+        ? query(collection(db, "users", form.idToken, "entries"), orderBy("service"), limit(state.getters['getConstLimitPerPage']), startAfter(docSnap))
+        : query(collection(db, "users", form.idToken, "entries"), where("mark", "==", true), orderBy("service"), limit(state.getters['getConstLimitPerPage']), startAfter(docSnap));
       state.commit('setListPage', form.page);
       const querySnapshot = await getDocs(entryQuery);
       querySnapshot.forEach((doc) => {
@@ -201,7 +208,9 @@ const actions = {
       let simpleEnc = new SimpleCrypto(state.getters["getEncKey"]);
       let entryArray = []
       const docSnap = await getDoc(doc(db, "users", form.idToken, "entries", state.getters['getListEntries'][state.getters['getListEntries'].length - 1].id));
-      const entryQuery = query(collection(db, "users", form.idToken, "entries"), orderBy("service"), limit(state.getters['getConstLimitPerPage']), endBefore(docSnap));
+      const entryQuery = form.type === "list" 
+        ? query(collection(db, "users", form.idToken, "entries"), orderBy("service"), limit(state.getters['getConstLimitPerPage']), endBefore(docSnap))
+        : query(collection(db, "users", form.idToken, "entries"), where("mark", "==", true), orderBy("service"), limit(state.getters['getConstLimitPerPage']), endBefore(docSnap));
       state.commit('setListPage', form.page);
       const querySnapshot = await getDocs(entryQuery);
       querySnapshot.forEach((doc) => {

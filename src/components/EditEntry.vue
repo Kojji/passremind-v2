@@ -323,6 +323,7 @@ function generatePassword() {
           Cancel
         </button>
         <button
+          v-if="props.mode !== 'create'"
           data-modal-toggle="defaultModal"
           type="button"
           @click="deleteEntry()"

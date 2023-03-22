@@ -4,6 +4,7 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import SearchComponent from "/src/components/Search.vue";
 import ListComponent from "/src/components/List.vue";
+import MarkedComponent from "/src/components/Marked.vue";
 import EditModal from "/src/components/EditEntry.vue";
 
 const store = useStore();
@@ -107,6 +108,17 @@ function closeModal(refresh) {
             >List</a
           >
         </li>
+        <li class="-mb-px mr-1">
+          <a
+            :class="
+              selected === 'marked'
+                ? 'bg-white inline-block border-l border-t border-r border-orange-800 rounded-t py-2 px-4 text-orange-300 font-semibold'
+                : 'bg-white inline-block py-2 px-4 text-orange-600 hover:text-orange-800 font-semibold cursor-pointer'
+            "
+            @click="selected = 'marked'"
+            >Marked</a
+          >
+        </li>
         <li class="-mb-px w-full flex justify-end mb-1 mr-2">
           <a
             class="inline-block border border-orange-600 rounded py-1 px-3 bg-orange-600 hover:bg-orange-800 text-zinc-100 cursor-pointer"
@@ -117,7 +129,13 @@ function closeModal(refresh) {
       </ul>
       <SearchComponent v-if="selected === 'search'" @editEntry="openEdit" />
       <ListComponent
-        v-else
+        v-if="selected === 'list'"
+        @editEntry="openEdit"
+        v-bind:refresh="modal.propagateRefresh"
+        @refreshed="modal.propagateRefresh = false"
+      />
+      <MarkedComponent
+        v-if="selected === 'marked'"
         @editEntry="openEdit"
         v-bind:refresh="modal.propagateRefresh"
         @refreshed="modal.propagateRefresh = false"

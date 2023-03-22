@@ -4,6 +4,7 @@ import { computed, onMounted, reactive, watch, ref } from "vue";
 
 const emit = defineEmits(["refreshed", "editEntry"]);
 const props = defineProps(["refresh"]);
+// corrigir - edit to show marked
 
 watch(
   () => props.refresh,
@@ -31,7 +32,7 @@ async function list() {
   loading.value = true;
   await store.dispatch("entries/listEntries", {
     idToken: store.getters["login/getIdToken"],
-    type: "list",
+    type: "marked",
   });
   loading.value = false;
 }
@@ -42,13 +43,13 @@ async function paginate(newPage) {
     await store.dispatch("entries/paginateUp", {
       idToken: store.getters["login/getIdToken"],
       page: newPage,
-      type: "list",
+      type: "marked",
     });
   } else {
     await store.dispatch("entries/paginateDown", {
       idToken: store.getters["login/getIdToken"],
       page: newPage,
-      type: "list",
+      type: "marked",
     });
   }
   loading.value = false;
@@ -65,10 +66,11 @@ function copyText(text, type) {
   });
 }
 
+// function will only be used to unmark on this component
 function toggleMark(index) {
   let idToken = store.getters["login/getIdToken"];
   store
-    .dispatch("entries/toggleMark", { idToken, index, type: "list" })
+    .dispatch("entries/toggleMark", { idToken, index, type: "marked" })
     .then((markStatus) => {
       store.dispatch("misc/activateNotification", {
         duration: 3,
@@ -77,11 +79,12 @@ function toggleMark(index) {
           : "Entry unmarked as favorite!",
         type: "success",
       });
+      list();
     })
     .catch(() => {
       store.dispatch("misc/activateNotification", {
         duration: 3,
-        message: "Attempt to mark/unmark entry failed! Try again later!",
+        message: "Attempt to unmark entry failed! Try again later!",
         type: "fail",
       });
     });

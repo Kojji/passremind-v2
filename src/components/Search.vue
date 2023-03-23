@@ -15,6 +15,10 @@ watch(
   }
 );
 
+onMounted(async () => {
+  store.commit("entries/setSearchEntries", []);
+});
+
 const store = useStore();
 let entries = computed(() => store.getters["entries/getSearchEntries"]);
 let searchText = ref("");
@@ -43,7 +47,7 @@ function copyText(text, type) {
 function toggleMark(index) {
   let idToken = store.getters["login/getIdToken"];
   store
-    .dispatch("entries/toggleMarkSearch", { idToken, index })
+    .dispatch("entries/toggleMark", { idToken, index, component: "search" })
     .then((markStatus) => {
       store.dispatch("misc/activateNotification", {
         duration: 3,

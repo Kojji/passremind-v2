@@ -230,30 +230,15 @@ const actions = {
       res()
     })
   },
-  toggleMark(state, {idToken, index}) {
+  toggleMark(state, {idToken, index, component = "list"}) {
     return new Promise(async (res, rej)=>{
       try {
-        let copy = state.getters["getListEntries"]
+        let copy = component == "list" ? state.getters["getListEntries"] : state.getters["getSearchEntries"]
         await updateDoc(doc(db, "users", idToken, "entries", copy[index].id), {
           mark: !copy[index].mark
         });
         copy[index].mark = !copy[index].mark
-        state.commit('setListEntries', copy)
-        res(copy[index].mark)
-      } catch(err) {
-        rej(err.message)
-      }
-    })
-  },
-  toggleMarkSearch(state, {idToken, index}) {
-    return new Promise(async (res, rej)=>{
-      try {
-        let copy = state.getters["getSearchEntries"]
-        await updateDoc(doc(db, "users", idToken, "entries", copy[index].id), {
-          mark: !copy[index].mark
-        });
-        copy[index].mark = !copy[index].mark
-        state.commit('setSearchEntries', copy)
+        component == "list" ? state.commit('setListEntries', copy) : state.commit('setSearchEntries', copy)
         res(copy[index].mark)
       } catch(err) {
         rej(err.message)

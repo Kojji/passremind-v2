@@ -23,7 +23,6 @@ let loading = reactive({ value: true });
 
 onMounted(async () => {
   store.commit("entries/setListPage", 1);
-  checkToken(store.getters["login/getIdToken"]);
   list();
 });
 
@@ -85,10 +84,6 @@ function toggleMark(index) {
         type: "fail",
       });
     });
-}
-
-function checkToken(token) {
-  console.log(token);
 }
 </script>
 

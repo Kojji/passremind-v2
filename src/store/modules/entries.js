@@ -66,6 +66,7 @@ const actions = {
         let resultEncKey = await getEncKey();
         if(!resultEncKey.data) throw new Error("Unable to retrieve encryption key!")
         state.commit("setEncKey", resultEncKey.data)
+        console.log(resultEncKey.data)
         res()
       } catch(err) {
         rej(err.message)
@@ -238,6 +239,21 @@ const actions = {
         });
         copy[index].mark = !copy[index].mark
         state.commit('setListEntries', copy)
+        res(copy[index].mark)
+      } catch(err) {
+        rej(err.message)
+      }
+    })
+  },
+  toggleMarkSearch(state, {idToken, index}) {
+    return new Promise(async (res, rej)=>{
+      try {
+        let copy = state.getters["getSearchEntries"]
+        await updateDoc(doc(db, "users", idToken, "entries", copy[index].id), {
+          mark: !copy[index].mark
+        });
+        copy[index].mark = !copy[index].mark
+        state.commit('setSearchEntries', copy)
         res(copy[index].mark)
       } catch(err) {
         rej(err.message)

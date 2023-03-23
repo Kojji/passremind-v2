@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onMounted, inject, reactive } from "vue";
+import { computed, ref, onMounted, reactive } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import SearchComponent from "/src/components/Search.vue";
@@ -127,7 +127,12 @@ function closeModal(refresh) {
           >
         </li>
       </ul>
-      <SearchComponent v-if="selected === 'search'" @editEntry="openEdit" />
+      <SearchComponent
+        v-if="selected === 'search'"
+        @editEntry="openEdit"
+        v-bind:refresh="modal.propagateRefresh"
+        @refreshed="modal.propagateRefresh = false"
+      />
       <ListComponent
         v-if="selected === 'list'"
         @editEntry="openEdit"

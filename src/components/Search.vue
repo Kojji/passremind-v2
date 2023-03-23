@@ -9,7 +9,7 @@ watch(
   () => props.refresh,
   (curr, old) => {
     if (curr) {
-      list();
+      search();
       emit("refreshed");
     }
   }
@@ -29,10 +29,6 @@ async function search() {
   loading.value = false;
 }
 
-function openCard(entry) {
-  console.log(entry);
-}
-
 function copyText(text, type) {
   let information = {
     duration: 3,
@@ -47,7 +43,7 @@ function copyText(text, type) {
 function toggleMark(index) {
   let idToken = store.getters["login/getIdToken"];
   store
-    .dispatch("entries/toggleMark", { idToken, index })
+    .dispatch("entries/toggleMarkSearch", { idToken, index })
     .then((markStatus) => {
       store.dispatch("misc/activateNotification", {
         duration: 3,

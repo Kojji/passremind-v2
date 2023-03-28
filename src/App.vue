@@ -1,14 +1,14 @@
 <script setup>
-import TopNav from '/src/components/TopBar.vue'
-import FooterNav from '/src/components/Footer.vue'
-import NotificationAlert from '/src/components/Notification.vue'
+import TopNav from "/src/components/TopBar.vue";
+import FooterNav from "/src/components/Footer.vue";
+import NotificationAlert from "/src/components/Notification.vue";
 </script>
 
 <template>
   <div id="app" class="flex flex-col h-screen justify-between">
     <TopNav />
-    <NotificationAlert/>
-    <router-view />
+    <NotificationAlert />
+    <router-view class="grow sm:grow-0" />
     <FooterNav />
   </div>
 </template>

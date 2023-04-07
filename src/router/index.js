@@ -50,6 +50,13 @@ const routes = [
         return {path: '/about'}
       }
     }
+  },
+  {
+    path: '/signup',
+    name: 'SignUp',
+    component: function () {
+      return import( '../views/SignUp.vue')
+    }
   }
 ]
 

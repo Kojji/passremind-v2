@@ -87,7 +87,7 @@ function countDown(duration, index) {
                 <span class="font-semibold">{{
                   titleRange[notification.type]
                 }}</span>
-                <span class="block text-gray-500">{{
+                <span class="block text-gray-500 w-[200px] sm:w-[400px]">{{
                   notification.message
                 }}</span>
               </div>

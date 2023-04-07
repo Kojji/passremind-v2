@@ -2,6 +2,7 @@ import {
   signInWithEmailAndPassword,
   setPersistence,
   inMemoryPersistence,
+  createUserWithEmailAndPassword,
   signOut,
   onAuthStateChanged
 } from "firebase/auth"
@@ -22,6 +23,21 @@ const mutations = {
 }
 
 const actions = {
+  signUp(state, form) {
+    return new Promise((res, rej)=>{
+      setPersistence(auth, inMemoryPersistence)
+      .then(() => {
+        createUserWithEmailAndPassword(auth, form.email, form.password)
+        .then((result) => {
+          state.commit("setLogged", true);
+          state.commit("setIdToken", result.user.uid);
+          res();
+        }).catch((error) => {
+          rej(error.code);
+        });  
+      });
+    });
+  },
   signIn(state, form) {
     return new Promise((res, rej)=>{
       setPersistence(auth, inMemoryPersistence)
@@ -43,7 +59,6 @@ const actions = {
         .then(() => {
           state.commit("setLogged", false);
           state.commit("setIdToken", null);
-          // router.push('/login');
           res();
         }).catch(() => {
           rej();
@@ -56,6 +71,7 @@ const actions = {
         if(user) {
           state.commit("setLogged", true)
           state.commit("setIdToken", user.uid)
+          console.log(user)
           res()
         } else {
           rej({message: 'User not logged in!'})

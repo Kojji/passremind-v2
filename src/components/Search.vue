@@ -42,11 +42,31 @@ let loading = reactive({ value: false });
 
 async function search() {
   loading.value = true;
-  await store.dispatch("entries/searchEntries", {
-    idToken: store.getters["login/getIdToken"],
-    search: searchText.value,
-  });
-  loading.value = false;
+  store
+    .dispatch("entries/searchEntries", {
+      idToken: store.getters["login/getIdToken"],
+      search: searchText.value,
+    })
+    .catch((error) => {
+      let message = "";
+      switch (error) {
+        case "no-enc-key":
+          message = "Encryption key not found!";
+          break;
+        default:
+          message = `There was an error in your request, please try again later!`;
+          break;
+      }
+
+      store.dispatch("misc/activateNotification", {
+        duration: 3,
+        message,
+        type: "fail",
+      });
+    })
+    .finally(() => {
+      loading.value = false;
+    });
 }
 
 function copyText(text, type) {

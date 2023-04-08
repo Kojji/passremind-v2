@@ -44,11 +44,31 @@ onMounted(async () => {
 
 async function list() {
   loading.value = true;
-  await store.dispatch("entries/listEntries", {
-    idToken: store.getters["login/getIdToken"],
-    type: "list",
-  });
-  loading.value = false;
+  store
+    .dispatch("entries/listEntries", {
+      idToken: store.getters["login/getIdToken"],
+      type: "list",
+    })
+    .catch((error) => {
+      let message = "";
+      switch (error) {
+        case "no-enc-key":
+          message = "Encryption key not found!";
+          break;
+        default:
+          message = `There was an error in your request, please try again later!`;
+          break;
+      }
+
+      store.dispatch("misc/activateNotification", {
+        duration: 3,
+        message,
+        type: "fail",
+      });
+    })
+    .finally(() => {
+      loading.value = false;
+    });
 }
 
 async function paginate(newPage) {

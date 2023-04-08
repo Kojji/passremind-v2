@@ -133,52 +133,62 @@ const actions = {
   },
   searchEntries(state, form) {
     return new Promise(async (res, rej)=>{
+      if(state.getters["getEncKey"] === null) rej('no-enc-key')
       let simpleEnc = new SimpleCrypto(state.getters["getEncKey"]);
-      let entryArray = []
-      const entryQuery = query(collection(db, "users", form.idToken, "entries"), orderBy("service"), startAt(form.search), endAt(form.search + '\uf8ff'), limit(state.getters['getConstLimitPerPage']));
-      const querySnapshot = await getDocs(entryQuery);
-      querySnapshot.forEach((doc) => {
-        let entryData = doc.data()
-        entryArray.push({
-          id: doc.id,
-          service: entryData.service,
-          login: simpleEnc.decrypt(entryData.login),
-          password: simpleEnc.decrypt(entryData.password),
-          serviceLink: entryData.serviceLink,
-          mark: entryData.mark
-        })
-      });
-      state.commit('setSearchEntries', entryArray)
-      res()
+      try {
+        let entryArray = []
+        const entryQuery = query(collection(db, "users", form.idToken, "entries"), orderBy("service"), startAt(form.search), endAt(form.search + '\uf8ff'), limit(state.getters['getConstLimitPerPage']));
+        const querySnapshot = await getDocs(entryQuery);
+        querySnapshot.forEach((doc) => {
+          let entryData = doc.data()
+          entryArray.push({
+            id: doc.id,
+            service: entryData.service,
+            login: simpleEnc.decrypt(entryData.login),
+            password: simpleEnc.decrypt(entryData.password),
+            serviceLink: entryData.serviceLink,
+            mark: entryData.mark
+          })
+        });
+        state.commit('setSearchEntries', entryArray)
+        res()
+      } catch(error) {
+        rej(error.code)
+      }
     })
   },
   listEntries(state, form) {
     return new Promise(async (res, rej)=>{
+      if(state.getters["getEncKey"] === null) rej('no-enc-key')
       let simpleEnc = new SimpleCrypto(state.getters["getEncKey"]);
-      let entryArray = []
-      const entryQuery = form.type === "list" 
-        ? query(collection(db, "users", form.idToken, "entries"), orderBy("service"), limit(state.getters['getConstLimitPerPage']))
-        : query(collection(db, "users", form.idToken, "entries"), where("mark", "==", true), orderBy("service"), limit(state.getters['getConstLimitPerPage']));
-      const countSnapshot = await getCountFromServer(
-        form.type === "list"
-          ? query(collection(db, "users", form.idToken, "entries")) 
-          : query(collection(db, "users", form.idToken, "entries"), where("mark", "==", true)));
-      state.commit('setTotalListEntries', countSnapshot.data().count);
-      state.commit('setListPage', 1);
-      const querySnapshot = await getDocs(entryQuery);
-      querySnapshot.forEach((doc) => {
-        let entryData = doc.data()
-        entryArray.push({
-          id: doc.id,
-          service: entryData.service,
-          login: simpleEnc.decrypt(entryData.login),
-          password: simpleEnc.decrypt(entryData.password),
-          serviceLink: entryData.serviceLink,
-          mark: entryData.mark
-        })
-      });
-      state.commit('setListEntries', entryArray)
-      res()
+      try {
+        let entryArray = []
+        const entryQuery = form.type === "list" 
+          ? query(collection(db, "users", form.idToken, "entries"), orderBy("service"), limit(state.getters['getConstLimitPerPage']))
+          : query(collection(db, "users", form.idToken, "entries"), where("mark", "==", true), orderBy("service"), limit(state.getters['getConstLimitPerPage']));
+        const countSnapshot = await getCountFromServer(
+          form.type === "list"
+            ? query(collection(db, "users", form.idToken, "entries")) 
+            : query(collection(db, "users", form.idToken, "entries"), where("mark", "==", true)));
+        state.commit('setTotalListEntries', countSnapshot.data().count);
+        state.commit('setListPage', 1);
+        const querySnapshot = await getDocs(entryQuery);
+        querySnapshot.forEach((doc) => {
+          let entryData = doc.data()
+          entryArray.push({
+            id: doc.id,
+            service: entryData.service,
+            login: simpleEnc.decrypt(entryData.login),
+            password: simpleEnc.decrypt(entryData.password),
+            serviceLink: entryData.serviceLink,
+            mark: entryData.mark
+          })
+        });
+        state.commit('setListEntries', entryArray)
+        res()
+      } catch(error) {
+        rej(error.code)
+      }
     })
   },
   // corrigir - error treatment

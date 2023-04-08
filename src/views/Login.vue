@@ -2,6 +2,7 @@
 import { reactive } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import ForgotModal from "/src/components/ForgotPassword.vue";
 
 const router = useRouter();
 const store = useStore();
@@ -12,6 +13,17 @@ let loginInputs = reactive({
 let pageVars = reactive({
   loading: false,
 });
+let modal = reactive({
+  open: false,
+});
+
+function openModal() {
+  modal.open = true;
+}
+
+function closeModal() {
+  modal.open = false;
+}
 
 function toSignUp() {
   router.push("/signup");
@@ -39,7 +51,16 @@ function login() {
 </script>
 
 <template>
-  <div class="Login w-full h-full flex items-center justify-center bg-zinc-100">
+  <div class="w-full h-full flex items-center justify-center bg-zinc-100">
+    <div v-if="modal.open">
+      <div
+        class="fixed z-20 top-0 left-0 w-screen h-screen flex items-center justify-center"
+        style="background-color: rgba(183, 158, 127, 0.4)"
+        @click.self="modal.open = false"
+      >
+        <ForgotModal @closeModal="closeModal" />
+      </div>
+    </div>
     <div
       :class="
         pageVars.loading
@@ -94,6 +115,7 @@ function login() {
         <a
           class="inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker"
           href="#"
+          @click="openModal"
         >
           Forgot Password?
         </a>

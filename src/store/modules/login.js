@@ -3,6 +3,7 @@ import {
   setPersistence,
   inMemoryPersistence,
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
   signOut,
   onAuthStateChanged
 } from "firebase/auth"
@@ -77,6 +78,15 @@ const actions = {
           rej({message: 'User not logged in!'})
         }
       })
+    })
+  },
+  sendResetPassword(state, form) {
+    return new Promise(async (res, rej)=>{
+      sendPasswordResetEmail(auth, form.email)
+        .then(()=>{res()})
+        .catch((error)=>{
+          rej(error.code)
+        })
     })
   }
 }

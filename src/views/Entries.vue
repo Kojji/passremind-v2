@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onMounted, reactive } from "vue";
+import { ref, onMounted, reactive } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import SearchComponent from "/src/components/Search.vue";
@@ -26,12 +26,12 @@ let form = reactive({
 let selected = ref("search");
 
 onMounted(() => {
-  checkToken(store.getters["login/getIdToken"]);
+  checkToken();
 });
 
-function checkToken(token) {
+function checkToken() {
   store
-    .dispatch("login/checkToken", token)
+    .dispatch("login/checkToken")
     .then(() => {
       store.dispatch("entries/retrieveEncKey");
     })

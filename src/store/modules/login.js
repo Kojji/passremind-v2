@@ -72,10 +72,10 @@ const actions = {
         if(user) {
           state.commit("setLogged", true)
           state.commit("setIdToken", user.uid)
-          // console.log(user)
+          console.log(user)
           res()
         } else {
-          rej({message: 'User not logged in!'})
+          rej('User not logged in!')
         }
       })
     })

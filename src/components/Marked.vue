@@ -89,10 +89,6 @@ function toggleMark(index) {
       });
     });
 }
-
-function checkToken(token) {
-  // console.log(token);
-}
 </script>
 
 <template>

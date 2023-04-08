@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from "vue";
+import { onMounted, reactive } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 
@@ -13,6 +13,26 @@ let loginInputs = reactive({
 let pageVars = reactive({
   loading: false,
 });
+
+onMounted(() => {
+  checkToken();
+});
+
+function checkToken() {
+  store
+    .dispatch("login/checkToken")
+    .then(() => {
+      store.dispatch("entries/retrieveEncKey");
+      store.dispatch("misc/activateNotification", {
+        duration: 3,
+        message: "User already logged in!",
+        type: "success",
+      });
+      router.push("/");
+    })
+    .catch(() => {});
+}
+
 function signup() {
   pageVars.loading = true;
   const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}$/;

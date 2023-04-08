@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from "vue";
+import { onMounted, reactive } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import ForgotModal from "/src/components/ForgotPassword.vue";
@@ -16,6 +16,25 @@ let pageVars = reactive({
 let modal = reactive({
   open: false,
 });
+
+onMounted(() => {
+  checkToken();
+});
+
+function checkToken() {
+  store
+    .dispatch("login/checkToken")
+    .then(() => {
+      store.dispatch("entries/retrieveEncKey");
+      store.dispatch("misc/activateNotification", {
+        duration: 3,
+        message: "User already logged in!",
+        type: "success",
+      });
+      router.push("/");
+    })
+    .catch(() => {});
+}
 
 function openModal() {
   modal.open = true;

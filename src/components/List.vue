@@ -1,7 +1,9 @@
 <script setup>
 import { useStore } from "vuex";
 import { computed, onMounted, reactive, watch, ref } from "vue";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const emit = defineEmits(["refreshed", "editEntry"]);
 const props = defineProps(["refresh"]);
 
@@ -22,8 +24,22 @@ let listPage = computed(() => store.getters["entries/getListPage"]);
 let loading = reactive({ value: true });
 
 onMounted(async () => {
-  store.commit("entries/setListPage", 1);
-  list();
+  store
+    .dispatch("login/checkToken")
+    .then(async () => {
+      await store.dispatch("entries/retrieveEncKey");
+      store.commit("entries/setListPage", 1);
+      list();
+    })
+    .catch((e) => {
+      store.dispatch("misc/activateNotification", {
+        duration: 3,
+        message: e.message,
+        type: "fail",
+      });
+      store.commit("entries/setEncKey", null);
+      router.push("/login");
+    });
 });
 
 async function list() {

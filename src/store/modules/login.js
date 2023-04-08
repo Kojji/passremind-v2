@@ -1,6 +1,7 @@
 import {
   signInWithEmailAndPassword,
   setPersistence,
+  // browserSessionPersistence,
   inMemoryPersistence,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
@@ -41,6 +42,7 @@ const actions = {
   },
   signIn(state, form) {
     return new Promise((res, rej)=>{
+      // setPersistence(auth, browserSessionPersistence)
       setPersistence(auth, inMemoryPersistence)
         .then(() => {
           signInWithEmailAndPassword(auth, form.email, form.password)
@@ -72,10 +74,9 @@ const actions = {
         if(user) {
           state.commit("setLogged", true)
           state.commit("setIdToken", user.uid)
-          console.log(user)
           res()
         } else {
-          rej('User not logged in!')
+          rej({message: 'User session expired!'})
         }
       })
     })

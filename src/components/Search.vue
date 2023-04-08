@@ -1,7 +1,9 @@
 <script setup>
 import { useStore } from "vuex";
 import { computed, onMounted, reactive, watch, ref } from "vue";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const emit = defineEmits(["refreshed", "editEntry"]);
 const props = defineProps(["refresh"]);
 
@@ -16,7 +18,21 @@ watch(
 );
 
 onMounted(async () => {
-  store.commit("entries/setSearchEntries", []);
+  store
+    .dispatch("login/checkToken")
+    .then(async () => {
+      await store.dispatch("entries/retrieveEncKey");
+      store.commit("entries/setSearchEntries", []);
+    })
+    .catch((e) => {
+      store.dispatch("misc/activateNotification", {
+        duration: 3,
+        message: e.message,
+        type: "fail",
+      });
+      store.commit("entries/setEncKey", null);
+      router.push("/login");
+    });
 });
 
 const store = useStore();

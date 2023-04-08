@@ -1,14 +1,9 @@
 <script setup>
-import { ref, onMounted, reactive } from "vue";
-import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import { ref, reactive } from "vue";
 import SearchComponent from "/src/components/Search.vue";
 import ListComponent from "/src/components/List.vue";
 import MarkedComponent from "/src/components/Marked.vue";
 import EditModal from "/src/components/EditEntry.vue";
-
-const store = useStore();
-const router = useRouter();
 
 let modal = reactive({
   open: false,
@@ -24,22 +19,6 @@ let form = reactive({
   mark: false,
 });
 let selected = ref("marked");
-
-onMounted(() => {
-  checkToken();
-});
-
-function checkToken() {
-  store
-    .dispatch("login/checkToken")
-    .then(() => {
-      store.dispatch("entries/retrieveEncKey");
-    })
-    .catch((e) => {
-      // console.log(e.message)
-      router.push("/login");
-    });
-}
 
 function openCreate() {
   form.id = "";

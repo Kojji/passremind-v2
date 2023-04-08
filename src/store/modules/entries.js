@@ -62,6 +62,9 @@ const actions = {
   retrieveEncKey(state) {
     return new Promise(async (res, rej) => {
       try {
+        if(state.getters["getEncKey"] !== null) {
+          res()
+        }
         const getEncKey = httpsCallable(functions, 'getPassEnc');
         let resultEncKey = await getEncKey();
         if(!resultEncKey.data) throw new Error("Unable to retrieve encryption key!")

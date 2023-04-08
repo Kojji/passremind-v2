@@ -48,8 +48,8 @@ const actions = {
               state.commit("setLogged", true);
               state.commit("setIdToken", result.user.uid);
               res();
-            }).catch(() => {
-              rej('err1');
+            }).catch((error) => {
+              rej(error.code);
             });
         });
     });
@@ -72,7 +72,7 @@ const actions = {
         if(user) {
           state.commit("setLogged", true)
           state.commit("setIdToken", user.uid)
-          console.log(user)
+          // console.log(user)
           res()
         } else {
           rej({message: 'User not logged in!'})

@@ -66,7 +66,7 @@ const actions = {
         let resultEncKey = await getEncKey();
         if(!resultEncKey.data) throw new Error("Unable to retrieve encryption key!")
         state.commit("setEncKey", resultEncKey.data)
-        console.log(resultEncKey.data)
+        // console.log(resultEncKey.data)
         res()
       } catch(err) {
         rej(err.message)
@@ -79,7 +79,7 @@ const actions = {
 
       const querySnapshot = await getDocs(queryRef);
       if(querySnapshot.docs.length > 0) {
-        console.log(querySnapshot.docs[0].id)
+        // console.log(querySnapshot.docs[0].id)
         if(querySnapshot.docs[0].id !== form.id) {
           rej({code: 1, message: 'Entry already exists'})
         } else {
@@ -104,7 +104,7 @@ const actions = {
         res()
 
       } catch(e) {
-        console.log(e.message)
+        // console.log(e.message)
         rej()
       }
     })
@@ -123,7 +123,7 @@ const actions = {
         res()
 
       } catch(e) {
-        console.log(e.message)
+        // console.log(e.message)
         rej()
       }
     })
@@ -225,7 +225,7 @@ const actions = {
           mark: entryData.mark
         })
       });
-      console.log(entryArray)
+      // console.log(entryArray)
       state.commit('setListEntries', entryArray)
       res()
     })

@@ -36,15 +36,33 @@ function login() {
       email: loginInputs.email,
       password: loginInputs.password,
     })
-    .catch((error) => {
-      if (error === "err1") {
-        alert("Conta não encontrada");
-      } else {
-        alert("Problema ao tentar entrar no sistema, tente mais tarde");
-      }
-    })
-    .finally(() => {
+    .then(() => {
       router.push("/");
+      pageVars.loading = false;
+    })
+    .catch((error) => {
+      let message = "";
+      switch (error) {
+        case "auth/user-not-found":
+        case "auth/wrong-password":
+          message = "Email and/or password incorrect!";
+          break;
+        case "auth/invalid-email":
+          message = "Email invalid!";
+          break;
+        case "auth/user-disabled":
+          message = "Administrator disabled this user!";
+          break;
+        default:
+          message = `There was an error in your request, please try again later!`;
+          break;
+      }
+
+      store.dispatch("misc/activateNotification", {
+        duration: 3,
+        message,
+        type: "fail",
+      });
       pageVars.loading = false;
     });
 }

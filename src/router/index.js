@@ -46,7 +46,7 @@ const routes = [
       } catch(e) {
         store.commit('login/setLogged', false);
         store.commit('login/setIdToken', null);
-        console.log(e.message);
+        // console.log(e.message);
         return {path: '/about'}
       }
     }

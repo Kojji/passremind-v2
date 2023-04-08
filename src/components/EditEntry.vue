@@ -65,7 +65,7 @@ async function createEdit() {
         // corrigir - index of notification class
       }
       // corrigir - notification error
-      console.log(e);
+      // console.log(e);
     }
   } else {
     // edit
@@ -90,7 +90,7 @@ async function createEdit() {
     } catch (e) {
       pageVars.loading = false;
       // corrigir - notification
-      console.log(e);
+      // console.log(e);
     }
   }
 }

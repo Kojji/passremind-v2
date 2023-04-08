@@ -23,7 +23,7 @@ let form = reactive({
   serviceLink: "",
   mark: false,
 });
-let selected = ref("search");
+let selected = ref("marked");
 
 onMounted(() => {
   checkToken();
@@ -89,19 +89,19 @@ function closeModal(refresh) {
         <li class="-mb-px mr-1">
           <a
             :class="
-              selected === 'search'
-                ? 'bg-white inline-block border-l border-t border-r border-orange-800 rounded-t py-2 px-4 text-orange-300 font-semibold'
+              selected === 'marked'
+                ? 'bg-white inline-block border-l border-t border-r border-orange-800 rounded-t py-2 px-4 text-orange-800 font-semibold'
                 : 'bg-white inline-block py-2 px-4 text-orange-600 hover:text-orange-800 font-semibold cursor-pointer'
             "
-            @click="selected = 'search'"
-            >Search</a
+            @click="selected = 'marked'"
+            >Marked</a
           >
         </li>
         <li class="-mb-px mr-1">
           <a
             :class="
               selected === 'list'
-                ? 'bg-white inline-block border-l border-t border-r border-orange-800 rounded-t py-2 px-4 text-orange-300 font-semibold'
+                ? 'bg-white inline-block border-l border-t border-r border-orange-800 rounded-t py-2 px-4 text-orange-800 font-semibold'
                 : 'bg-white inline-block py-2 px-4 text-orange-600 hover:text-orange-800 font-semibold cursor-pointer'
             "
             @click="selected = 'list'"
@@ -111,12 +111,12 @@ function closeModal(refresh) {
         <li class="-mb-px mr-1">
           <a
             :class="
-              selected === 'marked'
-                ? 'bg-white inline-block border-l border-t border-r border-orange-800 rounded-t py-2 px-4 text-orange-300 font-semibold'
+              selected === 'search'
+                ? 'bg-white inline-block border-l border-t border-r border-orange-800 rounded-t py-2 px-4 text-orange-800 font-semibold'
                 : 'bg-white inline-block py-2 px-4 text-orange-600 hover:text-orange-800 font-semibold cursor-pointer'
             "
-            @click="selected = 'marked'"
-            >Marked</a
+            @click="selected = 'search'"
+            >Search</a
           >
         </li>
         <li class="-mb-px w-full flex justify-end mb-1 mr-2">

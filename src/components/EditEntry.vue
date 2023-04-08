@@ -108,7 +108,6 @@ async function deleteEntry() {
     });
     pageVars.loading = false;
     emit("closeModal", true);
-    // corrigir - test notification
     store.dispatch("misc/activateNotification", {
       duration: 3,
       message: "Entry sucessfully deleted!",

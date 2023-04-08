@@ -171,7 +171,7 @@ function toggleMark(index) {
         <div
           v-for="(entry, index) in entries"
           :id="entry.id"
-          class="row-span-1 col-span-1 rounded p-2 flex flex-wrap content-start min-h-min border rounded leading-tight"
+          class="row-span-1 cursor-pointer col-span-1 rounded p-2 flex flex-wrap content-start min-h-min border rounded leading-tight"
           @click="$emit('editEntry', entry)"
         >
           <div class="w-full flex justify-end" style="color: orangered">

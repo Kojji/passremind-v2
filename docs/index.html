@@ -5,10 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
-<body>
+  <body>
+    <div class="">
+      <div class="w-full bg-orange-500 pt-4">
+        <div class="flex justify-center">
+          <span class="text-white text-lg font-bold">PassRemind Guide</span>
+        </div>
+        <div class="flex justify-center py-4 gap-2">
+          <span id="option-setup" onclick="changeOption('option-setup')" class="text-white cursor-pointer underline font-bold">Setup</span>
+          <span id="option-usage" onclick="changeOption('option-usage')" class="text-white cursor-pointer">Usage</span>
+          <span id="option-developer" onclick="changeOption('option-developer')" class="text-white cursor-pointer">Developer</span>
+        </div>
+      </div>
+      <div class="w-full">
+        <p>My first paragraph.</p>
+      </div>
+    </div>
 
-<h1 class="text-red-300">My First Heading</h1>
-<p>My first paragraph.</p>
+  </body>
 
-</body>
+  <script>
+    let pageSelect = "option-setup";
+
+    function changeOption(item) {
+      if(pageSelect === item) return;
+      let oldOption = document.getElementById(pageSelect);
+      oldOption.classList.remove("underline");
+      oldOption.classList.remove("font-bold");
+      let newOption = document.getElementById(item);
+      newOption.classList.add("underline");
+      newOption.classList.add("font-bold");
+      pageSelect = item;
+    }
+  </script> 
 </html>

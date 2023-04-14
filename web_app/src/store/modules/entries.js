@@ -133,9 +133,9 @@ const actions = {
   },
   searchEntries(state, form) {
     return new Promise(async (res, rej)=>{
-      if(state.getters["getEncKey"] === null) rej('no-enc-key')
-      let simpleEnc = new SimpleCrypto(state.getters["getEncKey"]);
       try {
+        if(state.getters["getEncKey"] === null) throw {code: 'no-enc-key'}
+        let simpleEnc = new SimpleCrypto(state.getters["getEncKey"]);
         let entryArray = []
         const entryQuery = query(collection(db, "users", form.idToken, "entries"), orderBy("service"), startAt(form.search), endAt(form.search + '\uf8ff'), limit(state.getters['getConstLimitPerPage']));
         const querySnapshot = await getDocs(entryQuery);
@@ -159,9 +159,9 @@ const actions = {
   },
   listEntries(state, form) {
     return new Promise(async (res, rej)=>{
-      if(state.getters["getEncKey"] === null) rej('no-enc-key')
-      let simpleEnc = new SimpleCrypto(state.getters["getEncKey"]);
       try {
+        if(state.getters["getEncKey"] === null) throw {code: 'no-enc-key'}
+        let simpleEnc = new SimpleCrypto(state.getters["getEncKey"]);
         let entryArray = []
         const entryQuery = form.type === "list" 
           ? query(collection(db, "users", form.idToken, "entries"), orderBy("service"), limit(state.getters['getConstLimitPerPage']))

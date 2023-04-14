@@ -12,30 +12,54 @@
           <span class="text-white text-lg font-bold">PassRemind Guide</span>
         </div>
         <div class="flex justify-center py-4 gap-2">
-          <span id="option-setup" onclick="changeOption('option-setup')" class="text-white cursor-pointer underline font-bold">Setup</span>
-          <span id="option-usage" onclick="changeOption('option-usage')" class="text-white cursor-pointer">Usage</span>
-          <span id="option-developer" onclick="changeOption('option-developer')" class="text-white cursor-pointer">Developer</span>
+          <span id="option-setup" onclick="changeOption(0)" class="text-white cursor-pointer underline font-bold">Setup</span>
+          <span id="option-usage" onclick="changeOption(1)" class="text-white cursor-pointer">Usage</span>
+          <span id="option-developer" onclick="changeOption(2)" class="text-white cursor-pointer">Developer</span>
         </div>
       </div>
-      <div class="w-full">
-        <p>My first paragraph.</p>
+      <div id="content-setup" class="w-full">
+        <p>Setup content.</p>
+      </div>
+      <div id="content-usage" class="w-full hidden">
+        <p>Usage content.</p>
+      </div>
+      <div id="content-developer" class="w-full hidden">
+        <p>Development content.</p>
       </div>
     </div>
 
   </body>
 
   <script>
-    let pageSelect = "option-setup";
+    let idList = [
+      {
+        option: "option-setup",
+        content: "content-setup"
+      },
+      {
+        option: "option-usage",
+        content: "content-usage"
+      },
+      {
+        option: "option-developer",
+        content: "content-developer"
+      }
+    ]
+    let pageSelect = 0;
 
-    function changeOption(item) {
-      if(pageSelect === item) return;
-      let oldOption = document.getElementById(pageSelect);
+    function changeOption(index) {
+      if(pageSelect === index) return;
+      let oldOption = document.getElementById(idList[pageSelect].option);
       oldOption.classList.remove("underline");
       oldOption.classList.remove("font-bold");
-      let newOption = document.getElementById(item);
+      let oldContent = document.getElementById(idList[pageSelect].content);
+      oldContent.classList.add("hidden");
+      let newOption = document.getElementById(idList[index].option);
       newOption.classList.add("underline");
       newOption.classList.add("font-bold");
-      pageSelect = item;
+      let newContent = document.getElementById(idList[index].content);
+      newContent.classList.remove("hidden");
+      pageSelect = index;
     }
   </script> 
 </html>

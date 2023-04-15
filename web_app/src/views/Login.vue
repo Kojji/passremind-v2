@@ -93,7 +93,7 @@ function login() {
       <div
         class="fixed z-20 top-0 left-0 w-screen h-screen flex items-center justify-center"
         style="background-color: rgba(183, 158, 127, 0.4)"
-        @click.self="modal.open = false"
+        @mousedown.self="modal.open = false"
       >
         <ForgotModal @closeModal="closeModal" />
       </div>

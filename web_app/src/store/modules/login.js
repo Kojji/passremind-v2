@@ -43,8 +43,8 @@ const actions = {
   signIn(state, form) {
     return new Promise((res, rej)=>{
       // setPersistence(auth, browserSessionPersistence)
-      // setPersistence(auth, inMemoryPersistence)
-      //   .then(() => {
+      setPersistence(auth, inMemoryPersistence)
+        .then(() => {
           signInWithEmailAndPassword(auth, form.email, form.password)
             .then((result) => {
               state.commit("setLogged", true);
@@ -54,7 +54,7 @@ const actions = {
               rej(error.code);
             });
         });
-    // });
+    });
   },
   signOut(state) {
     return new Promise((res, rej)=>{

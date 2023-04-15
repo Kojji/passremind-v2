@@ -30,6 +30,7 @@ onMounted(async () => {
       await store.dispatch("entries/retrieveEncKey");
       store.commit("entries/setListPage", 1);
       list();
+      console.log(entries);
     })
     .catch((e) => {
       store.dispatch("misc/activateNotification", {
@@ -290,7 +291,7 @@ function toggleMark(index) {
             />
           </div>
           <div class="w-full flex justify-between">
-            <p>{{ entry.password.replace(/./g, "*") }}</p>
+            <p>**********</p>
             <font-awesome-icon
               style="color: orangered"
               class="cursor-pointer"

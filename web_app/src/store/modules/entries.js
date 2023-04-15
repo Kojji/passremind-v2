@@ -84,7 +84,7 @@ const actions = {
       if(querySnapshot.docs.length > 0) {
         // console.log(querySnapshot.docs[0].id)
         if(querySnapshot.docs[0].id !== form.id) {
-          rej({code: 1, message: 'Entry already exists'})
+          rej('entry-exists')
         } else {
           res()
         }
@@ -96,6 +96,7 @@ const actions = {
   createEntry(state, form) {
     return new Promise(async (res, rej)=>{
       try {
+        if(state.getters["getEncKey"] === null) throw {code: 'no-enc-key'}
         let simpleEnc = new SimpleCrypto(state.getters["getEncKey"]);
         await setDoc(doc(db, "users", form.idToken, "entries", form.service), {
           service: form.service,
@@ -106,15 +107,15 @@ const actions = {
         });
         res()
 
-      } catch(e) {
-        // console.log(e.message)
-        rej()
+      } catch(error) {
+        rej(error.code ? error.code : error.message)
       }
     })
   },
   editEntry(state, form) {
     return new Promise(async (res, rej)=>{
       try {
+        if(state.getters["getEncKey"] === null) throw {code: 'no-enc-key'}
         let simpleEnc = new SimpleCrypto(state.getters["getEncKey"]);
         await setDoc(doc(db, "users", form.idToken, "entries", form.id), {
           service: form.service,
@@ -125,9 +126,8 @@ const actions = {
         });
         res()
 
-      } catch(e) {
-        // console.log(e.message)
-        rej()
+      } catch(error) {
+        rej(error.code ? error.code : error.message)
       }
     })
   },
@@ -153,7 +153,7 @@ const actions = {
         state.commit('setSearchEntries', entryArray)
         res()
       } catch(error) {
-        rej(error.code)
+        rej(error.code ? error.code : error.message)
       }
     })
   },

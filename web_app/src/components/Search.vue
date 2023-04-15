@@ -216,7 +216,7 @@ function toggleMark(index) {
             />
           </div>
           <div class="w-full flex justify-between">
-            <p>{{ entry.password.replace(/./g, "*") }}</p>
+            <p>**********</p>
             <font-awesome-icon
               style="color: orangered"
               class="cursor-pointer"

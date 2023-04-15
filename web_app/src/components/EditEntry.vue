@@ -38,11 +38,6 @@ onMounted(() => {
 
 async function createEdit() {
   if (props.mode === "create") {
-    let information = {
-      duration: 3,
-      message: "New password registered!",
-      type: "success",
-    };
     try {
       pageVars.loading = true;
       await store.dispatch("entries/checkIfExixts", {
@@ -55,17 +50,31 @@ async function createEdit() {
       });
       pageVars.loading = false;
       emit("closeModal", true);
-      store.dispatch("misc/activateNotification", information);
-    } catch (e) {
-      pageVars.loading = false;
-      if (e.code === 1) {
-        information.type = "fail";
-        information.message = "An Entry with the same name already exists!";
-        store.dispatch("misc/activateNotification", information);
-        // corrigir - index of notification class
+      store.dispatch("misc/activateNotification", {
+        duration: 3,
+        message: "New password registered!",
+        type: "success",
+      });
+    } catch (error) {
+      let message = "";
+      switch (error) {
+        case "no-enc-key":
+          message = "Encryption key not found!";
+          break;
+        case "entry-exists":
+          message = "Entry with same name already exists!";
+          break;
+        default:
+          message = `There was an error in your request, please try again later!`;
+          break;
       }
-      // corrigir - notification error
-      // console.log(e);
+
+      store.dispatch("misc/activateNotification", {
+        duration: 3,
+        message,
+        type: "fail",
+      });
+      pageVars.loading = false;
     }
   } else {
     // edit
@@ -87,10 +96,26 @@ async function createEdit() {
         pageVars.loading = false;
         emit("closeModal", true);
       }
-    } catch (e) {
+    } catch (error) {
+      let message = "";
+      switch (error) {
+        case "no-enc-key":
+          message = "Encryption key not found!";
+          break;
+        case "entry-exists":
+          message = "Entry with same name already exists!";
+          break;
+        default:
+          message = `There was an error in your request, please try again later!`;
+          break;
+      }
+
+      store.dispatch("misc/activateNotification", {
+        duration: 3,
+        message,
+        type: "fail",
+      });
       pageVars.loading = false;
-      // corrigir - notification
-      // console.log(e);
     }
   }
 }
@@ -102,17 +127,28 @@ async function deleteEntry() {
     )
   ) {
     pageVars.loading = true;
-    await store.dispatch("entries/deleteEntry", {
-      idEntry: form.id,
-      idToken: store.getters["login/getIdToken"],
-    });
-    pageVars.loading = false;
-    emit("closeModal", true);
-    store.dispatch("misc/activateNotification", {
-      duration: 3,
-      message: "Entry sucessfully deleted!",
-      type: "success",
-    });
+    store
+      .dispatch("entries/deleteEntry", {
+        idEntry: form.id,
+        idToken: store.getters["login/getIdToken"],
+      })
+      .then(() => {
+        pageVars.loading = false;
+        emit("closeModal", true);
+        store.dispatch("misc/activateNotification", {
+          duration: 3,
+          message: "Entry sucessfully deleted!",
+          type: "success",
+        });
+      })
+      .catch(() => {
+        store.dispatch("misc/activateNotification", {
+          duration: 3,
+          message:
+            "There was an error in your request, please try again later!",
+          type: "fail",
+        });
+      });
   }
 }
 

@@ -187,60 +187,69 @@ const actions = {
         state.commit('setListEntries', entryArray)
         res()
       } catch(error) {
-        rej(error.code)
+        rej(error.code ? error.code : error.message)
       }
     })
   },
-  // corrigir - error treatment
   paginateUp(state, form) {
     return new Promise(async (res, rej)=>{
-      let simpleEnc = new SimpleCrypto(state.getters["getEncKey"]);
-      let entryArray = []
-      const docSnap = await getDoc(doc(db, "users", form.idToken, "entries", state.getters['getListEntries'][state.getters['getListEntries'].length - 1].id));
-      const entryQuery = form.type === "list" 
-        ? query(collection(db, "users", form.idToken, "entries"), orderBy("service"), limit(state.getters['getConstLimitPerPage']), startAfter(docSnap))
-        : query(collection(db, "users", form.idToken, "entries"), where("mark", "==", true), orderBy("service"), limit(state.getters['getConstLimitPerPage']), startAfter(docSnap));
-      state.commit('setListPage', form.page);
-      const querySnapshot = await getDocs(entryQuery);
-      querySnapshot.forEach((doc) => {
-        let entryData = doc.data()
-        entryArray.push({
-          id: doc.id,
-          service: entryData.service,
-          login: simpleEnc.decrypt(entryData.login),
-          password: simpleEnc.decrypt(entryData.password),
-          serviceLink: entryData.serviceLink,
-          mark: entryData.mark
-        })
-      });
-      state.commit('setListEntries', entryArray)
-      res()
+      try {
+        if(state.getters["getEncKey"] === null) throw {code: 'no-enc-key'}
+        let simpleEnc = new SimpleCrypto(state.getters["getEncKey"]);
+        let entryArray = []
+        const docSnap = await getDoc(doc(db, "users", form.idToken, "entries", state.getters['getListEntries'][state.getters['getListEntries'].length - 1].id));
+        const entryQuery = form.type === "list" 
+          ? query(collection(db, "users", form.idToken, "entries"), orderBy("service"), limit(state.getters['getConstLimitPerPage']), startAfter(docSnap))
+          : query(collection(db, "users", form.idToken, "entries"), where("mark", "==", true), orderBy("service"), limit(state.getters['getConstLimitPerPage']), startAfter(docSnap));
+        state.commit('setListPage', form.page);
+        const querySnapshot = await getDocs(entryQuery);
+        querySnapshot.forEach((doc) => {
+          let entryData = doc.data()
+          entryArray.push({
+            id: doc.id,
+            service: entryData.service,
+            login: simpleEnc.decrypt(entryData.login),
+            password: simpleEnc.decrypt(entryData.password),
+            serviceLink: entryData.serviceLink,
+            mark: entryData.mark
+          })
+        });
+        state.commit('setListEntries', entryArray)
+        res()
+      } catch(error) {
+        rej(error.code ? error.code : error.message)
+      }
     })
   },
   paginateDown(state, form) {
     return new Promise(async (res, rej)=>{
-      let simpleEnc = new SimpleCrypto(state.getters["getEncKey"]);
-      let entryArray = []
-      const docSnap = await getDoc(doc(db, "users", form.idToken, "entries", state.getters['getListEntries'][state.getters['getListEntries'].length - 1].id));
-      const entryQuery = form.type === "list" 
-        ? query(collection(db, "users", form.idToken, "entries"), orderBy("service"), limit(state.getters['getConstLimitPerPage']), endBefore(docSnap))
-        : query(collection(db, "users", form.idToken, "entries"), where("mark", "==", true), orderBy("service"), limit(state.getters['getConstLimitPerPage']), endBefore(docSnap));
-      state.commit('setListPage', form.page);
-      const querySnapshot = await getDocs(entryQuery);
-      querySnapshot.forEach((doc) => {
-        let entryData = doc.data()
-        entryArray.push({
-          id: doc.id,
-          service: entryData.service,
-          login: simpleEnc.decrypt(entryData.login),
-          password: simpleEnc.decrypt(entryData.password),
-          serviceLink: entryData.serviceLink,
-          mark: entryData.mark
-        })
-      });
-      // console.log(entryArray)
-      state.commit('setListEntries', entryArray)
-      res()
+      try {
+        if(state.getters["getEncKey"] === null) throw {code: 'no-enc-key'}
+        let simpleEnc = new SimpleCrypto(state.getters["getEncKey"]);
+        let entryArray = []
+        const docSnap = await getDoc(doc(db, "users", form.idToken, "entries", state.getters['getListEntries'][state.getters['getListEntries'].length - 1].id));
+        const entryQuery = form.type === "list" 
+          ? query(collection(db, "users", form.idToken, "entries"), orderBy("service"), limit(state.getters['getConstLimitPerPage']), endBefore(docSnap))
+          : query(collection(db, "users", form.idToken, "entries"), where("mark", "==", true), orderBy("service"), limit(state.getters['getConstLimitPerPage']), endBefore(docSnap));
+        state.commit('setListPage', form.page);
+        const querySnapshot = await getDocs(entryQuery);
+        querySnapshot.forEach((doc) => {
+          let entryData = doc.data()
+          entryArray.push({
+            id: doc.id,
+            service: entryData.service,
+            login: simpleEnc.decrypt(entryData.login),
+            password: simpleEnc.decrypt(entryData.password),
+            serviceLink: entryData.serviceLink,
+            mark: entryData.mark
+          })
+        });
+        // console.log(entryArray)
+        state.commit('setListEntries', entryArray)
+        res()
+      } catch(error) {
+        rej(error.code ? error.code : error.message)
+      }
     })
   },
   toggleMark(state, {idToken, index, component = "list"}) {
@@ -254,7 +263,7 @@ const actions = {
         component == "list" ? state.commit('setListEntries', copy) : state.commit('setSearchEntries', copy)
         res(copy[index].mark)
       } catch(err) {
-        rej(err.message)
+        rej(error.code ? error.code : error.message)
       }
     })
   },
@@ -264,7 +273,7 @@ const actions = {
         await deleteDoc(doc(db, "users", idToken, "entries", idEntry));
         res()
       } catch(err) {
-        rej(err.message)
+        rej(error.code ? error.code : error.message)
       }
     })
   }

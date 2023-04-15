@@ -74,19 +74,60 @@ function list() {
 async function paginate(newPage) {
   loading.value = true;
   if (newPage > listPage.value) {
-    await store.dispatch("entries/paginateUp", {
-      idToken: store.getters["login/getIdToken"],
-      page: newPage,
-      type: "marked",
-    });
+    store
+      .dispatch("entries/paginateUp", {
+        idToken: store.getters["login/getIdToken"],
+        page: newPage,
+        type: "marked",
+      })
+      .catch((error) => {
+        let message = "";
+        switch (error) {
+          case "no-enc-key":
+            message = "Encryption key not found!";
+            break;
+          default:
+            message = `There was an error in your request, please try again later!`;
+            break;
+        }
+
+        store.dispatch("misc/activateNotification", {
+          duration: 3,
+          message,
+          type: "fail",
+        });
+      })
+      .finally(() => {
+        loading.value = false;
+      });
   } else {
-    await store.dispatch("entries/paginateDown", {
-      idToken: store.getters["login/getIdToken"],
-      page: newPage,
-      type: "marked",
-    });
+    store
+      .dispatch("entries/paginateDown", {
+        idToken: store.getters["login/getIdToken"],
+        page: newPage,
+        type: "marked",
+      })
+      .catch((error) => {
+        let message = "";
+        switch (error) {
+          case "no-enc-key":
+            message = "Encryption key not found!";
+            break;
+          default:
+            message = `There was an error in your request, please try again later!`;
+            break;
+        }
+
+        store.dispatch("misc/activateNotification", {
+          duration: 3,
+          message,
+          type: "fail",
+        });
+      })
+      .finally(() => {
+        loading.value = false;
+      });
   }
-  loading.value = false;
 }
 
 function copyText(text, type) {

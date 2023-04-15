@@ -30,7 +30,6 @@ onMounted(async () => {
       await store.dispatch("entries/retrieveEncKey");
       store.commit("entries/setListPage", 1);
       list();
-      console.log(entries);
     })
     .catch((e) => {
       store.dispatch("misc/activateNotification", {

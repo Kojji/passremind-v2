@@ -5,6 +5,12 @@ This folder holds the PassRemind web app, made with VueJs, Tailwind and Firebase
 ## Requirements
 
 - You must have node and npm installed
+- Install Firebase CLI
+
+```
+npm -g firebase-tools
+```
+
 - You must have a Firebase account or create one
 - Create a Firebase project
 
@@ -34,7 +40,7 @@ general setup
 
 ```
 npm install -g @vue/cli
-npm -g firebase-tools
+
 ```
 
 plugin setup

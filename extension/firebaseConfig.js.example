@@ -1,5 +1,0 @@
-const firebaseConfig = {
-  <FIREBASE PROJECT INFO OBJECT>
-};
-
-module.exports = firebaseConfig;

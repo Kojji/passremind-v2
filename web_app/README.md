@@ -16,13 +16,17 @@ npm -g firebase-tools
 
 ## App Setup
 
-- clone repo
+- Clone repo
 
 ```
-git clone
+git clone https://github.com/Kojji/passremind-v2.git
+cd passremind-v2/web_app/
 ```
 
-- update .env
+- Update web app .env
+
+Remove the '.example' out of the '.env.example', then go to the Firebase projet settings, and
+
 - update functions/.env
 - npm build
 - firebase deploy

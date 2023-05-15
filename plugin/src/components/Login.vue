@@ -1,10 +1,49 @@
 <script setup>
 import { reactive } from "vue";
+import { useStore } from "vuex";
 
 let loginInputs = reactive({
   email: "",
   password: "",
 });
+
+const store = useStore();
+
+function login() {
+  store
+    .dispatch("login/signIn", {
+      email: loginInputs.email,
+      password: loginInputs.password,
+    })
+    .then(() => {
+      console.log("logged in");
+    })
+    .catch((error) => {
+      let message = "";
+      switch (error) {
+        case "auth/user-not-found":
+        case "auth/wrong-password":
+          message = "Email and/or password incorrect!";
+          break;
+        case "auth/invalid-email":
+          message = "Email invalid!";
+          break;
+        case "auth/user-disabled":
+          message = "Administrator disabled this user!";
+          break;
+        default:
+          message = `There was an error in your request, please try again later!`;
+          break;
+      }
+
+      store.dispatch("misc/activateNotification", {
+        duration: 3,
+        message,
+        type: "fail",
+      });
+      console.log("failed");
+    });
+}
 </script>
 
 <template>
@@ -44,6 +83,7 @@ let loginInputs = reactive({
           Go to page
         </a>
         <button
+          @click="login"
           class="bg-green-600 hover:bg-green-800 text-white font-bold py-1 md:py-2 px-2 md:px-4 rounded"
           type="button"
         >

@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "core-js": "^3.8.3",
+    "firebase": "^9.22.0",
+    "simple-crypto-js": "^3.0.1",
     "vue": "^3.2.13",
     "vuex": "^4.0.2"
   },

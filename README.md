@@ -20,7 +20,9 @@ npm -g firebase-tools
 
 ```
 git clone https://github.com/Kojji/passremind-v2.git
-cd passremind-v2/web_app/
+cd passremind-v2/
+npm i
+cd functions/
 npm i
 ```
 

@@ -8,11 +8,12 @@ This folder holds the PassRemind web app, made with VueJs, Tailwind and Firebase
 - Install Firebase CLI
 
 ```
-npm -g firebase-tools
+npm i -g firebase-tools
 ```
 
 - You must have a Firebase account or create one
-- Create a Firebase project
+- Create a Firebase project (Billing must be enabled)
+- Create a firestore database on the production mode
 
 ## App Setup
 
@@ -29,7 +30,9 @@ npm i
 Remove the '.example' out of the '.env.example', do the same for functions/.env.example, then go to the Firebase project settings, and
 
 - update the .env file and the functions/.env file with the project info and a new SALT string
-- npm build
-- firebase deploy
+- npm run build
+- firebase deploy --project [project-alias]
+
+(The first time you execute the deploy command, it may ask you to enable the Cloud Firestore API, you can do it by going to the provided link)
 
 it will deploy you app on the URL indicated by firebase, under the creation of the project

@@ -1,9 +1,33 @@
-# PassRemind
+# PassRemind - web app
 
-_v2.0-2023_
+This folder holds the PassRemind web app, made with VueJs, Tailwind and Firebase. This app is a password manager intended to be used in a small scale environment (small user pool). To deploy this app for personal use, you can follow the instructions on this document.
 
-VueJs, Tailwind and Firebase password manager app.
+## Requirements
 
-This application is intended to be used in a small scale environment (small user pool), and consists of a web app (`web_app` folder) and a browser extension (optional use, inside the `plugin` folder).
+- You must have node and npm installed
+- Install Firebase CLI
 
-Setup information can be found inside each folder, but for a more detailed documentation please access the [link](https://kojji.github.io/passremind-v2/)
+```
+npm -g firebase-tools
+```
+
+- You must have a Firebase account or create one
+- Create a Firebase project
+
+## App Setup
+
+- Clone repo
+
+```
+git clone https://github.com/Kojji/passremind-v2.git
+cd passremind-v2/web_app/
+npm i
+```
+
+Remove the '.example' out of the '.env.example', do the same for functions/.env.example, then go to the Firebase project settings, and
+
+- update the .env file and the functions/.env file with the project info and a new SALT string
+- npm build
+- firebase deploy
+
+it will deploy you app on the URL indicated by firebase, under the creation of the project
